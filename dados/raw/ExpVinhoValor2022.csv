@@ -1,130 +1,130 @@
-Países,Quantidade (Kg),Valor (US$)
-Afeganistão,-,-
-África do Sul,-,-
-"Alemanha, República Democrática",7.630,45.367
-Angola,4.068,4.761
-Anguilla,-,-
-Antígua e Barbuda,419,1.866
-Antilhas Holandesas,-,-
-Argentina,480,3.232
-Aruba,-,-
-Austrália,1.424,12.299
-Áustria,6,212
-Bahamas,1.215,5.799
-Bangladesh,7,84
-Barbados,220,1.145
-Barein,979,2.789
-Bélgica,828,6.145
-Belice,-,-
-Benin,-,-
-Bolívia,32.530,49.011
-Bósnia-Herzegovina,-,-
-Brasil,2.504,952
-Bulgária,5,31
-Cabo Verde,-,-
-Camarões,-,-
-Canadá,1.183,5.784
-Catar,-,-
-"Cayman, Ilhas",160,958
-Chile,2.094,7.986
-China,105.395,404.647
-Chipre,1.521,4.458
-Cingapura,-,-
-"Cocos (Keeling), Ilhas",26,60
-Colômbia,8.217,14.068
-Comores,-,-
-Congo,-,-
-"Coreia, Republica Sul",77,257
-Costa do Marfim,-,-
-Costa Rica,-,-
-Croácia,34,484
-Cuba,16,6
-Curaçao,40.673,66.950
-Dinamarca,2,6
-Dominica,1.485,2.223
-El Salvador,-,-
-Emirados Arabes Unidos,4.781,85.465
-Equador,135,210
-"Eslovaca, Republica",-,-
-Espanha,-,-
-Estados Unidos,220.373,447.893
-Estônia,-,-
-Filipinas,375,790
-Finlândia,-,-
-França,5.694,25.008
-Gana,35.949,49.304
-Gibraltar,-,-
-Granada,5.610,7.914
-Grécia,920,2.426
-Guatemala,1.283,5.350
-Guiana,2.064,5.823
-Guiana Francesa,22,18
-Guine Bissau,-,-
-Guine Equatorial,-,-
-Haiti,553.503,741.014
-Honduras,-,-
-Hong Kong,9.371,38.218
-Hungria,-,-
-Ilha de Man,165,641
-Ilhas Virgens,-,-
-India,247,1.021
-Indonésia,-,-
-Irã,47,90
-Iraque,-,-
-Irlanda,-,-
-Itália,1.129,6.151
-Jamaica,-,-
-Japão,37.324,82.208
-Jordânia,-,-
-Letônia,-,-
-Líbano,-,-
-Libéria,9.145,34.815
-Luxemburgo,36,802
-Malásia,-,-
-Malta,3.127,15.587
-"Marshall, Ilhas",7.240,27.178
-Mauritânia,-,-
-México,6,33
-Moçambique,383,1.927
-Montenegro,-,-
-Namibia,-,-
-Nicaragua,-,-
-Nigéria,32.234,50.283
-Noruega,2.711,40.316
-Nova Caledônia,-,-
-Nova Zelândia,63,156
-Omã,194,670
-Países Baixos,7.034,37.240
-Panamá,11.490,49.392
-Paraguai,5.076.670,7.156.293
-Peru,-,-
-Polônia,-,-
-Porto Rico,-,-
-Portugal,1.918,7.613
-Quênia,1.440,2.080
-Reino Unido,18.835,138.154
-República Dominicana,-,-
-Rússia,66.046,118.618
-São Tomé e Príncipe,-,-
-São Vicente e Granadinas,20,51
-Senegal,-,-
-Serra Leoa,8.101,15.182
-Singapura,4.322,15.434
-Suazilândia,-,-
-Suécia,5,18
-Suíça,1.584,20.863
-Suriname,1.225,3.360
-Tailândia,432,1.713
-Taiwan (FORMOSA),25,277
-Tanzânia,-,-
-"Tcheca, República",1.305,9.997
-Togo,17.317,25.608
-Trinidade Tobago,-,-
-Tunísia,-,-
-Turquia,418,503
-Tuvalu,-,-
-Uruguai,637.117,997.367
-Vanuatu,-,-
-Venezuela,23.220,32.351
-Vietnã,130,277
-Total,7.025.983,10.945.282
+Países,Quantidade (Kg),Valor (US$),Ano
+Afeganistão,-,-,2022
+África do Sul,-,-,2022
+"Alemanha, República Democrática",7.630,45.367,2022
+Angola,4.068,4.761,2022
+Anguilla,-,-,2022
+Antígua e Barbuda,419,1.866,2022
+Antilhas Holandesas,-,-,2022
+Argentina,480,3.232,2022
+Aruba,-,-,2022
+Austrália,1.424,12.299,2022
+Áustria,6,212,2022
+Bahamas,1.215,5.799,2022
+Bangladesh,7,84,2022
+Barbados,220,1.145,2022
+Barein,979,2.789,2022
+Bélgica,828,6.145,2022
+Belice,-,-,2022
+Benin,-,-,2022
+Bolívia,32.530,49.011,2022
+Bósnia-Herzegovina,-,-,2022
+Brasil,2.504,952,2022
+Bulgária,5,31,2022
+Cabo Verde,-,-,2022
+Camarões,-,-,2022
+Canadá,1.183,5.784,2022
+Catar,-,-,2022
+"Cayman, Ilhas",160,958,2022
+Chile,2.094,7.986,2022
+China,105.395,404.647,2022
+Chipre,1.521,4.458,2022
+Cingapura,-,-,2022
+"Cocos (Keeling), Ilhas",26,60,2022
+Colômbia,8.217,14.068,2022
+Comores,-,-,2022
+Congo,-,-,2022
+"Coreia, Republica Sul",77,257,2022
+Costa do Marfim,-,-,2022
+Costa Rica,-,-,2022
+Croácia,34,484,2022
+Cuba,16,6,2022
+Curaçao,40.673,66.950,2022
+Dinamarca,2,6,2022
+Dominica,1.485,2.223,2022
+El Salvador,-,-,2022
+Emirados Arabes Unidos,4.781,85.465,2022
+Equador,135,210,2022
+"Eslovaca, Republica",-,-,2022
+Espanha,-,-,2022
+Estados Unidos,220.373,447.893,2022
+Estônia,-,-,2022
+Filipinas,375,790,2022
+Finlândia,-,-,2022
+França,5.694,25.008,2022
+Gana,35.949,49.304,2022
+Gibraltar,-,-,2022
+Granada,5.610,7.914,2022
+Grécia,920,2.426,2022
+Guatemala,1.283,5.350,2022
+Guiana,2.064,5.823,2022
+Guiana Francesa,22,18,2022
+Guine Bissau,-,-,2022
+Guine Equatorial,-,-,2022
+Haiti,553.503,741.014,2022
+Honduras,-,-,2022
+Hong Kong,9.371,38.218,2022
+Hungria,-,-,2022
+Ilha de Man,165,641,2022
+Ilhas Virgens,-,-,2022
+India,247,1.021,2022
+Indonésia,-,-,2022
+Irã,47,90,2022
+Iraque,-,-,2022
+Irlanda,-,-,2022
+Itália,1.129,6.151,2022
+Jamaica,-,-,2022
+Japão,37.324,82.208,2022
+Jordânia,-,-,2022
+Letônia,-,-,2022
+Líbano,-,-,2022
+Libéria,9.145,34.815,2022
+Luxemburgo,36,802,2022
+Malásia,-,-,2022
+Malta,3.127,15.587,2022
+"Marshall, Ilhas",7.240,27.178,2022
+Mauritânia,-,-,2022
+México,6,33,2022
+Moçambique,383,1.927,2022
+Montenegro,-,-,2022
+Namibia,-,-,2022
+Nicaragua,-,-,2022
+Nigéria,32.234,50.283,2022
+Noruega,2.711,40.316,2022
+Nova Caledônia,-,-,2022
+Nova Zelândia,63,156,2022
+Omã,194,670,2022
+Países Baixos,7.034,37.240,2022
+Panamá,11.490,49.392,2022
+Paraguai,5.076.670,7.156.293,2022
+Peru,-,-,2022
+Polônia,-,-,2022
+Porto Rico,-,-,2022
+Portugal,1.918,7.613,2022
+Quênia,1.440,2.080,2022
+Reino Unido,18.835,138.154,2022
+República Dominicana,-,-,2022
+Rússia,66.046,118.618,2022
+São Tomé e Príncipe,-,-,2022
+São Vicente e Granadinas,20,51,2022
+Senegal,-,-,2022
+Serra Leoa,8.101,15.182,2022
+Singapura,4.322,15.434,2022
+Suazilândia,-,-,2022
+Suécia,5,18,2022
+Suíça,1.584,20.863,2022
+Suriname,1.225,3.360,2022
+Tailândia,432,1.713,2022
+Taiwan (FORMOSA),25,277,2022
+Tanzânia,-,-,2022
+"Tcheca, República",1.305,9.997,2022
+Togo,17.317,25.608,2022
+Trinidade Tobago,-,-,2022
+Tunísia,-,-,2022
+Turquia,418,503,2022
+Tuvalu,-,-,2022
+Uruguai,637.117,997.367,2022
+Vanuatu,-,-,2022
+Venezuela,23.220,32.351,2022
+Vietnã,130,277,2022
+Total,7.025.983,10.945.282,2022
