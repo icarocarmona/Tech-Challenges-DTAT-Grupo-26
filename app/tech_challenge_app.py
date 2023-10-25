@@ -59,7 +59,10 @@ st.write('# Tech challenge')
 df = load_data()
 tab1, tab2, tab3 = st.tabs(["🎯 Objetivo", "📈 Chart", "🗃 Data"])
 
-tab3.table(df.head(10))
+
+with tab3:
+    st.dataframe(df, use_container_width=True, hide_index=True)
+
 
 # Montando o filtro de ano
 _min = 1970
