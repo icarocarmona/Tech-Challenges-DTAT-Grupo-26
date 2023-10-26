@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-
+import locale
 
 from streamlit.delta_generator import DeltaGenerator 
 
@@ -57,7 +57,7 @@ def agg_ano(dados, tab):
 st.write('# Tech challenge')
 # carregando os dados
 df = load_data()
-tab1, tab2, tab3 = st.tabs(["🎯 Objetivo", "📈 Chart", "🗃 Data"])
+home, tab2, tab3 = st.tabs(["🎯 Home", "📈 Chart", "🗃 Data"])
 
 
 with tab3:
@@ -74,3 +74,54 @@ user_num_input = tab2.slider("Filtro de ano", min_value=_min,
 
 top10_paises(df, tab2)
 agg_ano(df, tab2)
+
+
+
+
+
+### HOME ### 
+
+with home:
+    # locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Isso define o formato para dólares americanos, ajuste conforme necessário
+
+
+    st.write("# A história do vinho no Brasil:")
+    st.write(" https://blog.famigliavalduga.com.br/a-historia-do-vinho-no-brasil-conheca-a-trajetoria-da-bebida-em-territorio-nacional/")
+
+    st.write("O século XXI começou com boas perspectivas para o vinho no Brasil: a safra de 1999 teve reputação de ter sido uma das melhores produzidas por aqui até então. Nos anos 2000, o país continuou a se desenvolver nesse sentido, com tecnologias cada vez mais sofisticadas e preocupação crescente com a qualidade dos vinhos nacionais.")
+
+    # df_filtrado = df[(df['Ano'] == 1999)][['Quantidade (L)','Valor U$']].sum()
+    df_filtrado_2 = df[df['Ano'].isin([1999,2000, 2001, 2002])]
+    soma_valores = df_filtrado_2.groupby('Ano')[['Quantidade (L)','Valor U$']].sum()
+    df_soma_anos = soma_valores.reset_index()
+    df_soma_anos.columns = ['Ano','Soma de Quantidade (L)' ,'Soma de Valor U$']
+    df_soma_anos['Variação Vl Pct'] = df_soma_anos['Soma de Valor U$'].pct_change() * 100
+    df_soma_anos['Variação Qtd Pct'] = df_soma_anos['Soma de Quantidade (L)'].pct_change() * 100
+
+
+    valor_1999 = df_soma_anos[df_soma_anos['Ano'] == 1999]['Soma de Valor U$']
+    qtd_1999 = df_soma_anos[df_soma_anos['Ano'] == 1999]['Soma de Quantidade (L)']
+
+    valor_final = locale.format_string('%d', valor_1999, grouping=True)
+    qtd_final = locale.format_string('%d', qtd_1999, grouping=True)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Ano", "1999")
+    col2.metric("Quantidade (L)", f"{qtd_final}")
+    col3.metric("Valor U$", f"$ {valor_final}")
+
+
+    valor = df_soma_anos[df_soma_anos['Ano'] == 2000]['Soma de Valor U$']
+    qtd = df_soma_anos[df_soma_anos['Ano'] == 2000]['Soma de Quantidade (L)']
+
+    valor_final = locale.format_string('%d', valor, grouping=True)
+    qtd_final = locale.format_string('%d', qtd, grouping=True)
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Ano", "2000")
+    col2.metric("Quantidade (L)", f"{qtd_final}" , "-7%")
+    col3.metric("Valor U$", f"$ {valor_final}", "-14%")
+
+    st.write("Em 2002, as vinícolas da região do Vale dos Vinhedos, na Serra Gaúcha, chegaram a receber do Instituto Nacional da Propriedade Industrial (INPI) o direito de ter um selo de identificação de procedência geográfica! Foi o primeiro passo em direção à cobiçada denominação de origem, além de garantir mais qualidade para as garrafas produzidas ali devido às exigências do selo.")
+    st.bar_chart(data=df_soma_anos, x="Ano", y=["Soma de Valor U$", "Soma de Quantidade (L)"])
+
