@@ -29,6 +29,40 @@ def load_dados_producao():
         'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/Producao.csv', sep=';')
 
 
+@st.cache_data
+def load_dados_com_pais(df_filtrado):
+    country = pd.read_csv(
+        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/countries-with-regional-codes.csv')
+    paises = pd.read_csv(
+        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/pais.csv', encoding='latin-1', sep=';')
+
+    df_sem_zero = df_filtrado[df_filtrado['Quantidade (L)'] > 0]
+    df_sem_zero.loc[df_sem_zero['Destino'] == 'Países Baixos',
+                    'Destino'] = 'Países Baixos (Holanda)'
+
+    df_completo = df_sem_zero.merge(
+        paises, left_on='Destino', right_on='NO_PAIS', how='left')
+    df_completo = df_completo.merge(
+        country, left_on='CO_PAIS_ISON3', right_on='country-code', how='left')
+
+    return df_completo
+
+# Função para formatar os rótulos do eixo Y em unidades legíveis
+
+
+def format_millions(value, pos):
+    if value >= 1e3 and value < 1e6:
+        value = value / 1e3
+        return f'{value:.0f}k'
+    if value >= 1e6 and value < 1e7:
+        value = value / 1e6
+        return f'{value:.0f}M'
+    if value > 1e7:
+        value = value / 1e7
+        return f'{value:.0f}B'
+    return f'{value:.0f}'
+
+
 def top10_paises(dados: pd.DataFrame, tab: DeltaGenerator):
 
     df = dados[dados['Ano'].between(*user_num_input)]
@@ -111,32 +145,6 @@ def producao_de_vinho():
     plt.ylabel("Quantidade (milhares de litros)")
     plt.xticks(rotation=45)
     plt.legend(title="Produto")
-
-    mesa = produtos_desejados[produtos_desejados['produto'] == 'VINHO DE MESA']
-    fino = produtos_desejados[produtos_desejados['produto']
-                              == 'VINHO FINO DE MESA (VINÍFERA)']
-
-    # st.table(fino)
-    # st.table(mesa)
-
-    fig2 = go.Figure()
-    fig2.add_trace(go.Bar(
-        x=anos_recentes,
-        y=fino['Quantidade (L)'],
-        name='Vinho Fino',
-        marker_color='rgb(194,8,90)'
-    ))
-    fig2.add_trace(go.Bar(
-        x=anos_recentes,
-        y=mesa['Quantidade (L)'],
-        name='Vinho de Mesa',
-        marker_color='rgb(113,47,121)'
-    ))
-
-    # Here we modify the tickangle of the xaxis, resulting in rotated labels.
-    fig2.update_layout(title_text='Quantidade de Litros produzidos nos Últimos 15 Anos de Vinho de Mesa e Vinho Fino (VINÍFERA)',
-                       barmode='group', xaxis_tickangle=-45)
-    # st.plotly_chart(fig2, use_container_width=True)
 
     st.pyplot(fig)
 
@@ -236,6 +244,27 @@ def analise_1990_ate_2000():
     col3.metric("Valor U$", f"$ {valor_2000}", variacao_vl)
 
 
+def analise_1990_2000(df_filtrado):
+    # Filtrar os anos desejados
+    df_6_anos = df_filtrado[df_filtrado['Ano'].between(1990, 2000)]
+
+    # Defina o tamanho da figura
+    fig = plt.figure(figsize=(10, 4))
+
+    # Crie o gráfico de linhas
+    ax = sns.lineplot(data=df_6_anos, x='Ano', y='Valor U$', label='Valor U$')
+    ax = sns.lineplot(data=df_6_anos, x='Ano',
+                      y='Quantidade (L)', label='Quantidade (L)')
+
+    # Defina rótulos e legendas
+    plt.xlabel('Ano')
+    plt.ylabel('Valores')
+    plt.title('Gráfico de Linhas com Valor e Quantidade')
+    plt.legend()
+
+    st.pyplot(fig)
+
+
 def monta_dataframe_analise_90_00():
     df_filtrado_2 = df[df['Ano'].isin([1990, 2000])]
     soma_valores = df_filtrado_2.groupby(
@@ -249,6 +278,16 @@ def monta_dataframe_analise_90_00():
     ) * 100
 
     return df_soma_anos
+
+
+def analise_por_regiao(df):
+
+    df_completo = load_dados_com_pais(df)
+
+    fig = px.scatter(df_completo.query('Ano>=2007'), x='Ano', y="Quantidade (L)",
+                     size='Valor U$', color='region',
+                     hover_name="name", log_x=True, size_max=60)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 def analise_ultimos_15_anos():
@@ -278,6 +317,114 @@ def analise_ultimos_15_anos():
     # st.pyplot(fig)
 
 
+def analise_mercosul(df):
+    paises_mercosul = ["Brasil", "Argentina", "Uruguai", "Paraguai"]
+
+    mercosul = df[df['Destino'].isin(paises_mercosul)]
+    # mercosul = mercosul.set_index('Ano')
+    # mercosul.index = mercosul.index.astype(int)
+
+    fig = px.line(mercosul.query("Ano>=2012"),
+                  x="Ano", y="Valor U$", color='Destino')
+
+    fig.update_layout(title_text="Mercosul")
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def plotbar(df):
+    # sns.set_theme(style='dark')
+    sns.set(style='whitegrid')
+    # sns.set_palette("Set2")
+
+    # Defina o tamanho da figura
+    fig = plt.figure(figsize=(15, 4))
+
+    # Crie o gráfico de barras
+    ax = sns.barplot(data=df, x="Ano", y='Valor U$', hue='Destino')
+
+    # Calcule a média e a mediana
+    media = df['Valor U$'].mean()
+    mediana = df['Valor U$'].median()
+
+    # Adiciona linhas representando a média e a mediana no gráfico
+    plt.axhline(media, color='r', linestyle='--',
+                label=f'Média ({format_millions(media,0)} U$)')
+    plt.axhline(mediana, color='g', linestyle='--',
+                label=f'Mediana ({format_millions(mediana,0)} U$)')
+
+    # Adiciona formatação nos valores
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(format_millions))
+
+    # Ajuste os rótulos do eixo x manualmente
+    # ax.set_xticks(range(len(df)))
+    ax.set_xticklabels(df['Ano'].unique(), rotation=45)
+
+    # Adicione uma legenda
+    plt.legend()
+
+    # Exiba o gráfico
+    st.pyplot(fig)
+
+
+def analise_geral_10_anos(df):
+    fig = px.line(df.query("Ano>=2012"),
+                  x="Ano", y="Valor U$", color='Destino')
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def analise_paraguai(df):
+    rows_with_zeros = (df == 0).any(axis=1)
+    df2 = df[~rows_with_zeros]
+    df2 = df2[df2['Destino'] == 'Paraguai']
+
+    df2['Variação Percentual'] = df2['Valor U$'].pct_change() * 100
+
+    df2['Variação Percentual'] = df2['Variação Percentual'].fillna(0)
+    # Formate os valores com duas casas decimais
+    df2['Variação Percentual'] = df2['Variação Percentual'].round(2)
+
+    cascata = df2.iloc[-10:]
+
+    fig = go.Figure(go.Waterfall(
+        x=cascata['Ano'],
+        y=cascata['Variação Percentual'],
+        text=cascata['Variação Percentual'],
+        textposition="outside",
+    ))
+
+    fig.update_layout(
+        title="Exportação para o Paraguai nos ulitmos 10 anos",
+        showlegend=True
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def analise_2010_2021(df_filtrado):
+    # Supondo que df_filtrado é o DataFrame original
+
+    # Filtrar os anos desejados
+    df_6_anos = df_filtrado[df_filtrado['Ano'].between(2010, 2021)]
+
+    # Defina o tamanho da figura
+    fig = plt.figure(figsize=(10, 4))
+
+    # Crie o gráfico de linhas
+    ax = sns.lineplot(data=df_6_anos, x='Ano', y='Valor U$', label='Valor U$')
+    ax = sns.lineplot(data=df_6_anos, x='Ano',
+                      y='Quantidade (L)', label='Quantidade (L)')
+
+    # Defina rótulos e legendas
+    plt.xlabel('Ano')
+    plt.ylabel('Valores')
+    plt.title('Gráfico de Linhas com Valor e Quantidade')
+    plt.legend()
+
+    st.pyplot(fig)
+
+
 with tab_historico:
     # locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Isso define o formato para dólares americanos, ajuste conforme necessário
 
@@ -295,13 +442,17 @@ with tab_historico:
 
     analise_1990_ate_2000()
 
+    analise_1990_2000(df)
+
     st.write("""        
     Embora as exportações tenham sido modestas até meados dos anos 2000, houve um crescimento notável de 2010 a 2021. O Brasil expandiu sua presença em mercados estrangeiros, ampliando a diversidade de vinhos exportados, não se restringindo apenas a espumantes, mas incluindo variedades de tintos, brancos e rosés, principalmente para países como EUA, Reino Unido, China e Canadá.
-        
-            <PRI VAI MANDAR>
+    """)
 
-    Apesar do crescimento, as exportações brasileiras de vinho ainda representam uma pequena parcela do mercado global, devido a desafios como competitividade de preços, barreiras comerciais e a consolidação de uma imagem de qualidade consistente. O Brasil observou um crescimento constante na exportação de vinhos ao longo do tempo, refletindo melhorias na qualidade e aceitação internacional, embora ainda esteja em processo de consolidação no mercado global de vinhos.
-        """)
+    analise_2010_2021(df)
+
+    st.write("""
+        Apesar do crescimento, as exportações brasileiras de vinho ainda representam uma pequena parcela do mercado global, devido a desafios como competitividade de preços, barreiras comerciais e a consolidação de uma imagem de qualidade consistente. O Brasil observou um crescimento constante na exportação de vinhos ao longo do tempo, refletindo melhorias na qualidade e aceitação internacional, embora ainda esteja em processo de consolidação no mercado global de vinhos.
+    """)
 
     # st.bar_chart(data=df_soma_anos, x="Ano", y=[
     #              "Soma de Valor U$", "Soma de Quantidade (L)"])
@@ -312,3 +463,17 @@ with tab_historico:
 
     st.write("Texto da explicação da producao ")
     producao_de_vinho()
+
+    analise_por_regiao(df)
+
+    analise_geral_10_anos(df)
+
+    plotbar(df[(df['Destino'] == 'China') & (df['Ano'] >= 2007)])
+
+    analise_mercosul(df[(df['Ano'] >= 2007)])
+
+    plotbar(df[(df['Destino'] == 'Uruguai') & (df['Ano'] >= 2007)])
+
+    plotbar(df[(df['Destino'] == 'Paraguai') & (df['Ano'] >= 2007)])
+
+    analise_paraguai(df)
