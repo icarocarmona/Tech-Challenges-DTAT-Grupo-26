@@ -5,19 +5,28 @@ import seaborn as sns
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import locale
+import plotly.express as px
 
 from streamlit.delta_generator import DeltaGenerator
 
+tipo_de_vinho = 'Vinho De Mesa'
+
 
 @st.cache_data
-def load_data():
-    dados = pd.read_csv(
+def load_dados_de_vinhos():
+    df = pd.read_csv(
         "https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/trusted/dados_de_vinhos.csv", sep=";")
     # filtra apenas vinho de mesa
-    dados = dados[dados['Tipo Vinho'] ==
-                  'Vinho De Mesa'].reset_index(drop=True)
+    dados = df[df['Tipo Vinho'] == tipo_de_vinho]
+    # .reset_index(drop=True)
     dados['Vl Litro'] = dados['Valor U$'] / dados['Quantidade (L)']
     return dados
+
+
+@st.cache_data
+def load_dados_producao():
+    return pd.read_csv(
+        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/Producao.csv', sep=';')
 
 
 def top10_paises(dados: pd.DataFrame, tab: DeltaGenerator):
@@ -56,13 +65,90 @@ def agg_ano(dados, tab):
     tab.pyplot(fig)
 
 
+def producao_de_vinho():
+
+    tabela = load_dados_producao()
+
+    # Suponhamos que você tenha um DataFrame chamado "tabela" com os dados
+    # Vamos usar o método "melt" para reorganizar a tabela
+
+    # Primeiro, crie uma lista de anos das colunas da tabela
+    anos = [str(ano) for ano in range(1970, 2023)]
+
+    # Use o método "melt" para transformar a tabela
+    tabela_melted = tabela.melt(id_vars=[
+                                "id", "produto"], value_vars=anos, var_name="Ano", value_name="Quantidade (L)")
+
+    # Suponhamos que você tenha uma tabela_melted com os dados reorganizados
+
+    # Filtrar linhas para "Vinho de Mesa" e "Rosado"
+    produtos_desejados = tabela_melted[tabela_melted['produto'].isin(
+        ["VINHO DE MESA", "VINHO FINO DE MESA (VINÍFERA)"])]
+
+    # Filtrar apenas os 15 anos mais recentes
+    anos_recentes = [str(ano) for ano in range(2007, 2023)]  # 2008 a 2022
+    produtos_desejados = produtos_desejados[produtos_desejados['Ano'].isin(
+        anos_recentes)]
+
+    # Normalizar as quantidades (dividir por 1.000)
+    produtos_desejados.loc[:,
+                           'Quantidade (L)'] = produtos_desejados['Quantidade (L)'] / 1000
+
+    # Criar o gráfico de barras empilhadas
+    fig = plt.figure(figsize=(18, 8))
+    sns.set(style="whitegrid")
+    ax = sns.barplot(data=produtos_desejados, x="Ano",
+                     y="Quantidade (L)", hue="produto")
+
+    # Adicionar rótulos de dados nas barras
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height():.1f}K', (p.get_x(
+        ) + p.get_width() / 2., p.get_height()), ha='center', va='bottom')
+
+    plt.title(
+        "Quantidade de Litros Vendidos nos Últimos 15 Anos para Vinho de Mesa e VINHO FINO DE MESA (VINÍFERA")
+    plt.xlabel("Ano")
+    plt.ylabel("Quantidade (milhares de litros)")
+    plt.xticks(rotation=45)
+    plt.legend(title="Produto")
+
+    mesa = produtos_desejados[produtos_desejados['produto'] == 'VINHO DE MESA']
+    fino = produtos_desejados[produtos_desejados['produto']
+                              == 'VINHO FINO DE MESA (VINÍFERA)']
+
+    # st.table(fino)
+    # st.table(mesa)
+
+    fig2 = go.Figure()
+    fig2.add_trace(go.Bar(
+        x=anos_recentes,
+        y=fino['Quantidade (L)'],
+        name='Vinho Fino',
+        marker_color='rgb(194,8,90)'
+    ))
+    fig2.add_trace(go.Bar(
+        x=anos_recentes,
+        y=mesa['Quantidade (L)'],
+        name='Vinho de Mesa',
+        marker_color='rgb(113,47,121)'
+    ))
+
+    # Here we modify the tickangle of the xaxis, resulting in rotated labels.
+    fig2.update_layout(title_text='Quantidade de Litros produzidos nos Últimos 15 Anos de Vinho de Mesa e Vinho Fino (VINÍFERA)',
+                       barmode='group', xaxis_tickangle=-45)
+    # st.plotly_chart(fig2, use_container_width=True)
+
+    st.pyplot(fig)
+
+
 st.write('# Tech challenge')
 # carregando os dados
-df = load_data()
-home, historico, tab3 = st.tabs(["🎯 Home", "📈 Historico", "🗃 Data"])
+df = load_dados_de_vinhos()
+tab_home, tab_historico, tab_dados = st.tabs(
+    ["🎯 Home", "📈 Historico", "🗃 Data"])
 
 
-with tab3:
+with tab_dados:
     paises = df['Destino'].unique()
     anos = df['Ano'].unique()
 
@@ -91,7 +177,7 @@ _max = 2022
 
 
 ### HOME ###
-with home:
+with tab_home:
     df_home = pd.DataFrame({
         "Nome": ["Bea", "Icaro", "Pri"],
         "linkedin": ["https://www.linkedin.com/", "https://www.linkedin.com/", "https://www.linkedin.com/"],
@@ -106,16 +192,52 @@ with home:
 
                  )
 
-with historico:
-    # locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Isso define o formato para dólares americanos, ajuste conforme necessário
 
-    st.write("# A história do vinho no Brasil:")
-    st.write(" https://blog.famigliavalduga.com.br/a-historia-do-vinho-no-brasil-conheca-a-trajetoria-da-bebida-em-territorio-nacional/")
+def plot_qtd_vinho_mesa_exp_ano(df):
+    sns.set(style="whitegrid")
+    g = sns.catplot(data=df, x='Ano',
+                    y='Quantidade (L)', kind='bar', height=6, aspect=2)
+    g.fig.suptitle(f'Quantidade {tipo_de_vinho} Exportados por Ano', y=1.02)
+    plt.xlabel('Ano')
+    plt.ylabel('Quantidade (L)')
 
-    st.write("O século XXI começou com boas perspectivas para o vinho no Brasil: a safra de 1999 teve reputação de ter sido uma das melhores produzidas por aqui até então. Nos anos 2000, o país continuou a se desenvolver nesse sentido, com tecnologias cada vez mais sofisticadas e preocupação crescente com a qualidade dos vinhos nacionais.")
+    # Rotacionar os rótulos dos anos para torná-los mais legíveis
+    g.set_xticklabels(rotation=45)
+    st.pyplot(g)
 
+
+def format_value(valor):
+    return locale.format_string('%d', valor, grouping=True)
+
+
+def analise_1990_ate_2000():
     # df_filtrado = df[(df['Ano'] == 1999)][['Quantidade (L)','Valor U$']].sum()
-    df_filtrado_2 = df[df['Ano'].isin([1999, 2000, 2001, 2002])]
+    df = monta_dataframe_analise_90_00()
+    filtro_1990 = df['Ano'] == 1990
+    filtro_2000 = df['Ano'] == 2000
+
+    valor_1990 = format_value(df[filtro_1990]['Soma de Valor U$'])
+    qtd_1990 = format_value(df[filtro_1990]['Soma de Quantidade (L)'])
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Ano", "1990")
+    col2.metric("Quantidade (L)", f"{valor_1990}")
+    col3.metric("Valor U$", f"$ {qtd_1990}")
+
+    valor_2000 = format_value(df[filtro_2000]['Soma de Valor U$'])
+    qtd_2000 = format_value(df[filtro_2000]['Soma de Quantidade (L)'])
+
+    variacao_qtd = format_value(df[filtro_2000]['Variação Qtd Pct'])
+    variacao_vl = format_value(df[filtro_2000]['Variação Vl Pct'])
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Ano", "2000")
+    col2.metric("Quantidade (L)", f"{qtd_2000}", variacao_qtd)
+    col3.metric("Valor U$", f"$ {valor_2000}", variacao_vl)
+
+
+def monta_dataframe_analise_90_00():
+    df_filtrado_2 = df[df['Ano'].isin([1990, 2000])]
     soma_valores = df_filtrado_2.groupby(
         'Ano')[['Quantidade (L)', 'Valor U$']].sum()
     df_soma_anos = soma_valores.reset_index()
@@ -126,73 +248,67 @@ with historico:
     df_soma_anos['Variação Qtd Pct'] = df_soma_anos['Soma de Quantidade (L)'].pct_change(
     ) * 100
 
-    valor_1999 = df_soma_anos[df_soma_anos['Ano'] == 1999]['Soma de Valor U$']
-    qtd_1999 = df_soma_anos[df_soma_anos['Ano']
-                            == 1999]['Soma de Quantidade (L)']
+    return df_soma_anos
 
-    valor_final = locale.format_string('%d', valor_1999, grouping=True)
-    qtd_final = locale.format_string('%d', qtd_1999, grouping=True)
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Ano", "1999")
-    col2.metric("Quantidade (L)", f"{qtd_final}")
-    col3.metric("Valor U$", f"$ {valor_final}")
+def analise_ultimos_15_anos():
+    anos = list(range(2007, 2023))
 
-    valor = df_soma_anos[df_soma_anos['Ano'] == 2000]['Soma de Valor U$']
-    qtd = df_soma_anos[df_soma_anos['Ano'] == 2000]['Soma de Quantidade (L)']
+    df_15_anos = df[df['Ano'].isin(anos)]
+    df_15_anos.index = df_15_anos.index.astype(int)
+    df_15_anos_com_venda = df_15_anos[df_15_anos['Valor U$'] != 0]
+    count_vendas = df_15_anos_com_venda.groupby('Ano')[['Destino']].count()
 
-    valor_final = locale.format_string('%d', valor, grouping=True)
-    qtd_final = locale.format_string('%d', qtd, grouping=True)
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Ano", "2000")
-    col2.metric("Quantidade (L)", f"{qtd_final}", "-7%")
-    col3.metric("Valor U$", f"$ {valor_final}", "-14%")
-
-    st.write("Em 2002, as vinícolas da região do Vale dos Vinhedos, na Serra Gaúcha, chegaram a receber do Instituto Nacional da Propriedade Industrial (INPI) o direito de ter um selo de identificação de procedência geográfica! Foi o primeiro passo em direção à cobiçada denominação de origem, além de garantir mais qualidade para as garrafas produzidas ali devido às exigências do selo.")
-    st.bar_chart(data=df_soma_anos, x="Ano", y=[
-                 "Soma de Valor U$", "Soma de Quantidade (L)"])
-
-    st.write("O comportamento das exportações de vinho no período de 2000-2006, através de análise descritiva de dados secundários do Ministério do Desenvolvimento, Indústria e Comércio Exterior (MDIC/SECEX). Os dados indicam que através do programa de incentivo às exportações e o esforço conjunto de vinícolas brasileiras ocorreu significativo aumento das exportações nos últimos 3 anos, com expansão de vendas de vinhos finos de varietais européias.")
-
-    anos = [2000, 2001, 2002, 2003, 2004, 2005, 2006]
-    df_6_anos = df[df['Ano'].isin(anos)]
-    # Defina o tamanho da figura
-    fig = plt.figure(figsize=(10, 4))
-
-    ax = sns.lineplot(data=df_6_anos, x='Ano', y='Valor U$', label='Valor U$')
-    ax = sns.lineplot(data=df_6_anos, x='Ano',
-                      y='Quantidade (L)', label='Quantidade (L)')
-
-    # Defina rótulos e legendas
-    plt.xlabel('Ano')
-    plt.ylabel('Valores')
-    plt.title('Gráfico de Linhas com Valor e Quantidade')
-    plt.legend()
-
-    # Exiba o gráfico
-    st.pyplot(fig)
-    df_6_anos.index = df_6_anos.index.astype(int)
-
-    st.write('A pauta de países compradores também ampliou-se de 11 para 34, indicando que novos consumidores externos estão adquirindo e conhecendo o vinho brasileiro.')
-    df_6_anos_com_venda = df_6_anos[df_6_anos['Valor U$'] != 0]
-    count_vendas = df_6_anos_com_venda.groupby('Ano')[['Valor U$']].count()
     st.bar_chart(count_vendas)
 
-    st.write(""""
-    https://revistaadega.uol.com.br/artigo/o-mercado-de-vinhos-importados-no-brasil_9189.html
+    # Defina o tamanho da figura
+    # fig = plt.figure(figsize=(10, 4))
+    # ax = sns.lineplot(data=df_15_anos, x='Ano',
+    #                   y='Valor U$', label='Quantidade')
+    # ax = sns.lineplot(data=df_15_anos, x='Ano',
+    #                   y='Quantidade (L)', label='Quantidade (L)')
 
-Os países exportadores apresentaram o seguinte quadro ao fim de 2008:
+    # # Defina rótulos e legendas
+    # plt.xlabel('Ano')
+    # plt.ylabel('Valores')
+    # plt.title('Gráfico de Linhas com Valor e Quantidade')
+    # plt.legend()
 
-1º CHILE Mais uma vez, mantendo sua hegemonia no mercado brasileiro, com impressionante participação de 34,38% e 30,68% respectivamente em volumes e valores, mais com crescimento de apenas 6,44% sobre 2007.
+    # Exiba o gráfico
+    # st.pyplot(fig)
 
-2º ARGENTINA Seguindo sua performance de 2007, manteve o segundo lugar como exportador ao Brasil, sendo 26,54% e 22,59% em volume e valor, com um pequeno crescimento de 3,43% sobre o ano anterior.
 
-3º ITÁLIA Depois de três anos consecutivos na quarta posição em share-value, os italianos findaram 2008 como terceiro maior exportador, tendo participação de 17,91% em volume e 14,73% em valor, e com surpreendente crescimento de 10,64% sobre 2007.
+with tab_historico:
+    # locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Isso define o formato para dólares americanos, ajuste conforme necessário
 
-4º PORTUGAL Apresentou o pior crescimento entre os exportadores, de apenas 0,66% frente a 2007, e sua participação ficou em 11,24% e 14,30%, respectivamente em volume e valores.
+    st.write("# A história da exportação do vinho no Brasil:")
+    st.write("""
+            Entre 1970 e 2021, a exportação de vinhos brasileiros cresceu consideravelmente. Inicialmente, a presença no mercado global era limitada. Nas décadas de 1970 e 1980, os vinhos brasileiros enfrentaram dificuldades para competir com os tradicionais da Europa e América do Sul, devido ao desenvolvimento incipiente em qualidade, tecnologia e reputação.
+        """)
 
-5º FRANÇA Também apresentou um crescimento interessante, de 10,64%, tendência identificada em anos anteriores. Sua participação foi de 4,54% em volume e de 9,81% em valor, observando que o valor médio deste país foi de US$ 6,78 p/ lt – o mais alto valor agregado dos países europeus. Também se deve observar que, em quatro anos, a França aumentou suas exportações para o Brasil em 183,04%.
+    # Crie um gráfico usando Seaborn catplot
+    plot_qtd_vinho_mesa_exp_ano(df)
 
-6º ESPANHA Surpreendentemente cresceu em 33,98% em relação a 2007, podendo constatar que em seis anos a Espanha aumentou suas exportações em 300,71%. Apesar de uma pequena participação de 1,82% e 3,64% em volume e valor, justifica sua fama de exportador de vinhos de alta qualidade, identificado no custo médio de US$ 6,18 p/lt.
-             """)
+    st.write("""
+    A partir dos anos 1990 e 2000, houve avanços. O reconhecimento internacional cresceu, impulsionado pela melhoria na qualidade dos vinhos, investimentos em novas técnicas de vinificação e foco em variedades locais, especialmente na Serra Gaúcha, destacando-se na produção de espumantes.
+    """)
+
+    analise_1990_ate_2000()
+
+    st.write("""        
+    Embora as exportações tenham sido modestas até meados dos anos 2000, houve um crescimento notável de 2010 a 2021. O Brasil expandiu sua presença em mercados estrangeiros, ampliando a diversidade de vinhos exportados, não se restringindo apenas a espumantes, mas incluindo variedades de tintos, brancos e rosés, principalmente para países como EUA, Reino Unido, China e Canadá.
+        
+            <PRI VAI MANDAR>
+
+    Apesar do crescimento, as exportações brasileiras de vinho ainda representam uma pequena parcela do mercado global, devido a desafios como competitividade de preços, barreiras comerciais e a consolidação de uma imagem de qualidade consistente. O Brasil observou um crescimento constante na exportação de vinhos ao longo do tempo, refletindo melhorias na qualidade e aceitação internacional, embora ainda esteja em processo de consolidação no mercado global de vinhos.
+        """)
+
+    # st.bar_chart(data=df_soma_anos, x="Ano", y=[
+    #              "Soma de Valor U$", "Soma de Quantidade (L)"])
+
+    st.write('A pauta de países compradores nos ultimos 15 anos também ampliou-se de 38 para 76, indicando que novos consumidores externos estão adquirindo e conhecendo o vinho brasileiro.')
+
+    analise_ultimos_15_anos()
+
+    st.write("Texto da explicação da producao ")
+    producao_de_vinho()
