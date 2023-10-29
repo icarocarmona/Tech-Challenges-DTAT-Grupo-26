@@ -11,6 +11,13 @@ from streamlit.delta_generator import DeltaGenerator
 
 tipo_de_vinho = 'Vinho De Mesa'
 
+st.set_page_config(
+    page_title="Tech Challenge - Grupo 26",
+    page_icon="🍷",
+    # layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 
 @st.cache_data
 def load_dados_de_vinhos():
