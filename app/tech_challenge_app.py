@@ -127,7 +127,7 @@ def producao_de_vinho():
         ["VINHO DE MESA", "VINHO FINO DE MESA (VINÍFERA)"])]
 
     # Filtrar apenas os 15 anos mais recentes
-    anos_recentes = [str(ano) for ano in range(2007, 2023)]  # 2008 a 2022
+    anos_recentes = [str(ano) for ano in range(2017, 2022)]  # 2018 a 2022
     produtos_desejados = produtos_desejados[produtos_desejados['Ano'].isin(
         anos_recentes)]
 
@@ -295,7 +295,7 @@ def analise_por_regiao(df):
 
     df_completo = load_dados_com_pais(df)
 
-    fig = px.scatter(df_completo.query('Ano>=2007'), x='Ano', y="Quantidade (L)",
+    fig = px.scatter(df_completo, x='Ano', y="Quantidade (L)",
                      size='Valor U$', color='region',
                      hover_name="name", log_x=True, size_max=60)
     st.plotly_chart(fig, use_container_width=True)
@@ -475,7 +475,8 @@ with tab_historico:
     st.write("Texto da explicação da producao ")
     producao_de_vinho()
 
-    analise_por_regiao(df)
+    st.write("No gráfico abaixo, podemos perceber que países da América têm uma representatividade maior a partir de 2015, liderados pelo Paraguai.")
+    analise_por_regiao(df[(df['Ano'] >= 2007)])
 
     analise_geral_10_anos(df)
 
