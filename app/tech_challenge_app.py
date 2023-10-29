@@ -153,7 +153,7 @@ st.write('# Tech challenge')
 # carregando os dados
 df = load_dados_de_vinhos()
 tab_home, tab_historico, tab_dados = st.tabs(
-    ["🎯 Home", "📈 Historico", "🗃 Data"])
+    ["🎯 Home", "📈 Análise", "🗃 Data"])
 
 
 with tab_dados:
@@ -186,9 +186,13 @@ _max = 2022
 
 ### HOME ###
 with tab_home:
+    st.write("Este projeto é a entrega do desafio tecnológico da fase 1 de análise de dados e exploração. Nele, realizamos uma análise dos dados de exportação de vinho do Brasil, com foco especial no estado do Rio Grande do Sul.")
+
+    st.write("### Integrantes do Grupo 26")
+
     df_home = pd.DataFrame({
-        "Nome": ["Bea", "Icaro", "Pri"],
-        "linkedin": ["https://www.linkedin.com/", "https://www.linkedin.com/", "https://www.linkedin.com/"],
+        "Nome": ["Beatriz Vieira", "Icaro Carmona", "Priscila de França"],
+        "linkedin": ["https://www.linkedin.com/in/beatriz-vieira-443210173/", "https://www.linkedin.com/in/icarocarmona/", "https://www.linkedin.com/in/pridefranca/"],
     })
     st.dataframe(df_home,
                  column_config={
