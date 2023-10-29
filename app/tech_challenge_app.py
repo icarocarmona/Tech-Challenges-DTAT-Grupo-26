@@ -147,7 +147,7 @@ def producao_de_vinho():
         ) + p.get_width() / 2., p.get_height()), ha='center', va='bottom')
 
     plt.title(
-        "Quantidade de Litros Vendidos nos Últimos 15 Anos para Vinho de Mesa e VINHO FINO DE MESA (VINÍFERA")
+        "Quantidade de litros produzidos nos últimos 15 Anos para Vinho de Mesa e VINHO FINO DE MESA (VINÍFERA")
     plt.xlabel("Ano")
     plt.ylabel("Quantidade (milhares de litros)")
     plt.xticks(rotation=45)
