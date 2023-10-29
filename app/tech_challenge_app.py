@@ -472,7 +472,14 @@ with tab_historico:
 
     analise_ultimos_15_anos()
 
-    st.write("Texto da explicação da producao ")
+    st.write("""
+    Foi constatado que o inverno de 2017 apresentou menos horas de frio, diminundo a emissão de brotos pelas uvas viníferas de estado. (IBRAVIN, 2018).
+
+    Em 2019 a produção de uva no Rio Grande do Sul cai quase 40% frente a 2018, a redução foi causada, principalmente, pela queda de granizo que comprometeu parreirais em municípios da Serra Gaúcha.
+
+    Já em em 2020 a exportação de vinho brasileiro bate recorde de janeiro a setembro de 2021, o vinho brasileiro foram comprados por 63 países entre janeiro e setembro de 2021. A taxa de aumento da produção de vinho foi de aproximadamente 38.7% de 2020 para 2021 e de cerca de 11.6% de 2021 para 2022.
+    """)
+
     producao_de_vinho()
 
     st.write("No gráfico abaixo, podemos perceber que países da América têm uma representatividade maior a partir de 2015, liderados pelo Paraguai.")
