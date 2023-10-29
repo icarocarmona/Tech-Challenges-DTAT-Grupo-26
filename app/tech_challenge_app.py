@@ -343,7 +343,7 @@ def analise_mercosul(df):
     st.plotly_chart(fig, use_container_width=True)
 
 
-def plotbar(df):
+def plotbar(df, y_column='Valor U$'):
     # sns.set_theme(style='dark')
     sns.set(style='whitegrid')
     # sns.set_palette("Set2")
@@ -352,11 +352,11 @@ def plotbar(df):
     fig = plt.figure(figsize=(15, 4))
 
     # Crie o gráfico de barras
-    ax = sns.barplot(data=df, x="Ano", y='Valor U$', hue='Destino')
+    ax = sns.barplot(data=df, x="Ano", y=y_column, hue='Destino')
 
     # Calcule a média e a mediana
-    media = df['Valor U$'].mean()
-    mediana = df['Valor U$'].median()
+    media = df[y_column].mean()
+    mediana = df[y_column].median()
 
     # Adiciona linhas representando a média e a mediana no gráfico
     plt.axhline(media, color='r', linestyle='--',
@@ -485,8 +485,16 @@ with tab_historico:
     st.write("No gráfico abaixo, podemos perceber que países da América têm uma representatividade maior a partir de 2015, liderados pelo Paraguai.")
     analise_por_regiao(df[(df['Ano'] >= 2007)])
 
+    st.write("""
+    O destaque de exportações para a Russia em 2013, é parcialmente atribuído às políticas do governo federal, como o Programa de Financiamento à Exportação (PEP), que ofereceu apoio, especialmente para exportações à Rússia, e ao programa Wine of Brasil.  No entanto, a partir de 2014, houve uma significativa redução nas exportaçõe. Essa diminuição pode ter sido influenciada por uma série de fatores, incluindo mudanças nas políticas, variações na demanda externa, concorrência de outros mercados ou condições econômicas tanto no Brasil quanto nos países importadores.
+    """)
     analise_geral_10_anos(df)
 
+    st.write("""
+    Podemos perceber que a China tem uma boa média, sendo consolidada como cliente recorrente. Ela tem sido afetada por problemas já descritos anteriormente nos últimos 15 anos. A China é um país importante para exportação devido à sua parceria e participação no BRICS.
+
+    Segundo informações do governo brasileiro China é o principal parceiro comercial do Brasil, a China comprou 90% de toda a exportação brasileira destinada aos BRICS, cerca de US\$ 89.4 bilhões. A Índia importou 6,3% (cerca de US\$ 6,3 bilhões), a Rússia foi destino de 2% das exportações (US\$ 1,96 bilhão) e a África do Sul, de 1,7% (US\$ 1,7 bilhão). [Ref.](https://www.gov.br/planalto/pt-br/assuntos/reuniao-do-brics/historia-do-brics/#:~:text=Principal%20parceiro%20comercial%20do%20Brasil%2C%20a%20China%20comprou,%C3%81frica%20do%20Sul%2C%20de%201%2C7%25%20%28US%24%201%2C7%20bilh%C3%A3o%29.)
+    """)
     plotbar(df[(df['Destino'] == 'China') & (df['Ano'] >= 2007)])
 
     analise_mercosul(df[(df['Ano'] >= 2007)])
