@@ -199,7 +199,7 @@ with tab_home:
 
     df_home = pd.DataFrame({
         "Nome": ["Beatriz Vieira", "Icaro Carmona", "Priscila de França"],
-        "linkedin": ["https://www.linkedin.com/in/beatriz-vieira-443210173/", "https://www.linkedin.com/in/icarocarmona/", "https://www.linkedin.com/in/pridefranca/"],
+        "linkedin": ["https://www.linkedin.com/in/beatrizrvieira/", "https://www.linkedin.com/in/icarocarmona/", "https://www.linkedin.com/in/pridefranca/"],
     })
     st.dataframe(df_home,
                  column_config={
@@ -486,7 +486,7 @@ with tab_historico:
     analise_por_regiao(df[(df['Ano'] >= 2007)])
 
     st.write("""
-    O destaque de exportações para a Russia em 2013, é parcialmente atribuído às políticas do governo federal, como o Programa de Financiamento à Exportação (PEP), que ofereceu apoio, especialmente para exportações à Rússia, e ao programa Wine of Brasil.  No entanto, a partir de 2014, houve uma significativa redução nas exportaçõe. Essa diminuição pode ter sido influenciada por uma série de fatores, incluindo mudanças nas políticas, variações na demanda externa, concorrência de outros mercados ou condições econômicas tanto no Brasil quanto nos países importadores.
+    O destaque de exportações para a Russia em 2013, é parcialmente atribuído às políticas do governo federal, como o Programa de Financiamento à Exportação (PEP), que ofereceu apoio, especialmente para exportações à Rússia, e ao programa Wine of Brasil.  No entanto, a partir de 2014, houve uma significativa redução nas exportações. Essa diminuição pode ter sido influenciada por uma série de fatores, incluindo mudanças nas políticas, variações na demanda externa, concorrência de outros mercados ou condições econômicas tanto no Brasil quanto nos países importadores.
     """)
     analise_geral_10_anos(df)
 
@@ -497,8 +497,14 @@ with tab_historico:
     """)
     plotbar(df[(df['Destino'] == 'China') & (df['Ano'] >= 2007)])
 
+    st.write("""
+    Dentro do Mercosul, há acordos e políticas comerciais que visam facilitar o comércio entre os países membros, reduzindo ou eliminando tarifas alfandegárias em muitos produtos, principalmente o vinho.
+
+    A isenção de impostos alfandegários no comércio de vinho entre os países do Mercosul pode representar uma vantagem competitiva para os produtores e exportadores em comparação com os produtores europeus. Essa isenção de tarifas pode resultar em custos menores para a importação e exportação de vinho entre os países membros, tornando os produtos do Mercosul mais competitivos no mercado interno dos países do bloco.
+    """)
     analise_mercosul(df[(df['Ano'] >= 2007)])
 
+    st.write("Podemos perceber que a exportação de vinho para o Uruguai é relativamente discreta, no entanto, nos últimos dois anos, observamos um crescimento significativo, atingindo a marca de 997 mil dólares em exportações. Esse aumento pode ter sido impulsionado por uma combinação de fatores, incluindo a qualidade do produto, uma demanda crescente e a competitividade dos preços, influenciada pelos acordos do Mercosul.")
     plotbar(df[(df['Destino'] == 'Uruguai') & (df['Ano'] >= 2007)])
 
     plotbar(df[(df['Destino'] == 'Paraguai') & (df['Ano'] >= 2007)])
