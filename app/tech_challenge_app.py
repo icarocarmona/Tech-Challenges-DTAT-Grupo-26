@@ -338,7 +338,7 @@ def analise_mercosul(df):
     fig = px.line(mercosul.query("Ano>=2012"),
                   x="Ano", y="Valor U$", color='Destino')
 
-    fig.update_layout(title_text="Mercosul")
+    # fig.update_layout(title_text="Mercosul")
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -455,6 +455,8 @@ def conclusao(df):
         China e Paraguai já são países já consolidados no mercado de importação de vinhos brasileiros, visando acordos futuros Paraguai continuará sendo um dos principais importadores, temas fiscais e de tributação são favoráveis para continuar e aumentar a facilitação na exportação/importação.
 
         Visando expansão de mercado, Uruguai é um dos países que mais obtém destaque para o futuro. Com um dado analisado de 2022 vimos que China, Paraguai e Uruguai representam {percentagem:.2f}% da venda total de exportações de vinho do Brasil, tendo uma crescente nos últimos dois anos. Um dos pontos de atenção positiva é que o Uruguai também faz parte do Mercosul, onde acordos tributários e de cooperação são bastante discutidos e visados por ambos os países.
+
+        Sobre os investimentos na China, este ano tivemos a notícia que 15 acordos foram assinados para fomentar a cooperação entre Brasil e China, áreas como pesquisa e educação, comunicação e principalmente comércio estão contemplados. Os acordos trazem uma novidade na economia que ajudará a facilitar as transações. As negociações diretas poderão ser feitas sem precisar do dólar, o que tornaria as operações mais baratas e vantajosas para investidores.
         """)
 
 
@@ -520,6 +522,8 @@ with tab_historico:
     plotbar(df[(df['Destino'] == 'China') & (df['Ano'] >= 2007)])
 
     st.write("""
+    ### Mercosul
+             
     Dentro do Mercosul, há acordos e políticas comerciais que visam facilitar o comércio entre os países membros, reduzindo ou eliminando tarifas alfandegárias em muitos produtos, principalmente o vinho.
 
     A isenção de impostos alfandegários no comércio de vinho entre os países do Mercosul pode representar uma vantagem competitiva para os produtores e exportadores em comparação com os produtores europeus. Essa isenção de tarifas pode resultar em custos menores para a importação e exportação de vinho entre os países membros, tornando os produtos do Mercosul mais competitivos no mercado interno dos países do bloco.
