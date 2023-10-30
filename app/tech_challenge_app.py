@@ -436,6 +436,28 @@ def analise_2010_2021(df_filtrado):
     st.pyplot(fig)
 
 
+def conclusao(df):
+    recomendacao = list(['Uruguai', 'Paraguai', 'China'])
+    df_22 = df[df['Ano'] == 2022]
+
+    total_venvido_22 = df_22['Valor U$'].sum()
+
+    df_filtrado_22 = df_22[df_22['Destino'].isin(recomendacao)]
+    total_venvido_pelos_3 = df_filtrado_22['Valor U$'].sum()
+
+    percentagem = (total_venvido_pelos_3 / total_venvido_22) * 100
+
+    st.write("## Conclusão")
+    st.write(
+        f"""
+        Com base nos dados e comparações apresentadas, sugerimos futuros investimentos na China, Paraguai e Uruguai. 
+
+        China e Paraguai já são países já consolidados no mercado de importação de vinhos brasileiros, visando acordos futuros Paraguai continuará sendo um dos principais importadores, temas fiscais e de tributação são favoráveis para continuar e aumentar a facilitação na exportação/importação.
+
+        Visando expansão de mercado, Uruguai é um dos países que mais obtém destaque para o futuro. Com um dado analisado de 2022 vimos que China, Paraguai e Uruguai representam {percentagem:.2f}% da venda total de exportações de vinho do Brasil, tendo uma crescente nos últimos dois anos. Um dos pontos de atenção positiva é que o Uruguai também faz parte do Mercosul, onde acordos tributários e de cooperação são bastante discutidos e visados por ambos os países.
+        """)
+
+
 with tab_historico:
     # locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')  # Isso define o formato para dólares americanos, ajuste conforme necessário
 
@@ -507,6 +529,9 @@ with tab_historico:
     st.write("Podemos perceber que a exportação de vinho para o Uruguai é relativamente discreta, no entanto, nos últimos dois anos, observamos um crescimento significativo, atingindo a marca de 997 mil dólares em exportações. Esse aumento pode ter sido impulsionado por uma combinação de fatores, incluindo a qualidade do produto, uma demanda crescente e a competitividade dos preços, influenciada pelos acordos do Mercosul.")
     plotbar(df[(df['Destino'] == 'Uruguai') & (df['Ano'] >= 2007)])
 
+    st.write("Embora China e Estados Unidos sejam considerados os mercados alvo, nosso principal destino exportador é o Paraguai responsável por 90% do crescimento das exportações totais de vinhos. ")
     plotbar(df[(df['Destino'] == 'Paraguai') & (df['Ano'] >= 2007)])
-
+    st.write("Ao analisarmos os últimos 10 anos, notamos que o Paraguai manteve uma tendência crescente na importação de vinho brasileiro. Nos anos em que houve uma queda, isso geralmente esteve relacionado à produção e aos fatores que afetaram o Brasil.")
     analise_paraguai(df)
+
+    conclusao(df)
