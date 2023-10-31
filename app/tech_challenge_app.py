@@ -56,6 +56,12 @@ def load_dados_com_pais(df_filtrado):
 
 # Função para formatar os rótulos do eixo Y em unidades legíveis
 
+def fontes_referencia():
+    st.write("### Fontes de pesquisas:")
+    st.write("- A história do vinho no Brasil. Blog Cervejaria Leopondina. Disponível em: <https://blog.famigliavalduga.com.br/a-historia-do-vinho-no-brasil-conheca-a-trajetoria-da-bebida-em-territorio-nacional/>")
+    st.write("- Cresce exportação de vinho brasileiro. Jornal O Tempo. Disponível em<https://www.otempo.com.br/economia/cresce-exportacao-de-vinho-brasileiro-1.270988>")
+    st.write("- No copo dos estrangeiros. Jornal do Vinho. Disponível em: <https://www.jornaldovinho.com.br/novo/no-copo-dos-estrangeiros/>")
+    st.write("- Exportação de vinho brasileiro bate recorde de janeiro a setembro de 2021. CNN BRasil. Disponível em: <https://www.cnnbrasil.com.br/economia/exportacao-de-vinho-brasileiro-bate-recorde-de-janeiro-a-setembro-de-2021/>")
 
 def format_millions(value, pos):
     if value >= 1e3 and value < 1e6:
@@ -539,3 +545,5 @@ with tab_historico:
     analise_paraguai(df)
 
     conclusao(df)
+
+    fontes_referencia()
