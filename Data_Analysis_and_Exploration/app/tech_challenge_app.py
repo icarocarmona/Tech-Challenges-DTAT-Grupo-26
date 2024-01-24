@@ -22,7 +22,7 @@ st.set_page_config(
 @st.cache_data
 def load_dados_de_vinhos():
     df = pd.read_csv(
-        "https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/trusted/dados_de_vinhos.csv", sep=";")
+        "https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/Data_Analysis_and_Exploration/dados/trusted/dados_de_vinhos.csv", sep=";")
     # filtra apenas vinho de mesa
     dados = df[df['Tipo Vinho'] == tipo_de_vinho]
     # .reset_index(drop=True)
@@ -33,15 +33,15 @@ def load_dados_de_vinhos():
 @st.cache_data
 def load_dados_producao():
     return pd.read_csv(
-        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/Producao.csv', sep=';')
+        'https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/Data_Analysis_and_Exploration/dados/raw/Producao.csv', sep=';')
 
 
 @st.cache_data
 def load_dados_com_pais(df_filtrado):
     country = pd.read_csv(
-        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/countries-with-regional-codes.csv')
+        'https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/Data_Analysis_and_Exploration/dados/raw/countries-with-regional-codes.csv')
     paises = pd.read_csv(
-        'https://raw.githubusercontent.com/icarocarmona/tech_challenge_f1/main/dados/raw/pais.csv', encoding='latin-1', sep=';')
+        'https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/Data_Analysis_and_Exploration/dados/raw/pais.csv', encoding='latin-1', sep=';')
 
     df_sem_zero = df_filtrado[df_filtrado['Quantidade (L)'] > 0]
     df_sem_zero.loc[df_sem_zero['Destino'] == 'Países Baixos',
