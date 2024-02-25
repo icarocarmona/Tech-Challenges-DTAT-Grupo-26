@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+seaborn==0.13.1
+plotly
+tensorflow
+yfinance
+scikit-learn
