@@ -278,7 +278,7 @@ CASE
       WHEN CAST(C007 AS INT64) = 8 THEN 'Trabalhador não remunerado'
       WHEN CAST(C007 AS INT64) = 9 THEN 'Estava fora do mercado de trabalho'
       ELSE 'Ignorado'
-END AS TIPO_TRABALHO,
+END AS TINHA_TIPO_TRABALHO,
 CASE 
       WHEN CAST(C007C AS INT64) = 1 THEN 'Empregado doméstico(em domicílios particulares)'
       WHEN CAST(C007C AS INT64) = 2 THEN 'Faxineiro (em empresa pública ou privada)'
