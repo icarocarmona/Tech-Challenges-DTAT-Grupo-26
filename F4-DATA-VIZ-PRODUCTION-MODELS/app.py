@@ -5,6 +5,7 @@ import plotly.express as px
 from datetime import datetime
 import joblib
 import numpy as np
+import plotly.express as px
 
 @st.cache_data
 def load_dataset():
@@ -54,11 +55,11 @@ def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_
           tickformat='%Y-%m-%d',
           tickmode='linear'
       ),
-    #   legend=dict(
-    #       x=0.01, y=0.99,
-    #       bgcolor='rgba(255, 255, 255, 0)',
-    #       bordercolor='rgba(255, 255, 255, 0)'
-    #   ),
+      legend=dict(
+          x=0.01, y=0.99,
+          bgcolor='rgba(255, 255, 255, 0)',
+          bordercolor='rgba(255, 255, 255, 0)'
+      ),
       autosize=False,
       width=1000,
       height=500,
@@ -100,28 +101,6 @@ next_week_dates = pd.date_range(df['Data'].iloc[-1], periods=8)[1:]
 current_week_dates = df['Data'].iloc[-7:]
 current_week_prices = df['Preco'].iloc[-7:]
 
-plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions)
-
-
-#Alterando o nome da segunda coluna
-df.rename(columns={df.columns[1]: 'Preco'}, inplace=True)
-
-# Alterando o tipo da coluna para datetime
-df['Data'] = pd.to_datetime(df['Data'], format='%d/%m/%Y')
-
-# Removendo linhas com valores não numéricos na coluna 'Preco'
-df = df[~df['Preco'].str.contains('[^0-9.,]', na=False)]
-
-# Convertendo a coluna Preco para float
-df['Preco'] = df['Preco'].str.replace(',', '.').astype(float)
-
-# Ordernando a coluna Data
-df = df.sort_values(by='Data', ascending=True)
-
-df = df.reset_index()
-df = df.drop('index', axis=1)
-
-import plotly.express as px
 
 fig = px.line(data_frame=df, x='Data', y='Preco')
 
@@ -130,3 +109,7 @@ fig = px.line(data_frame=df, x='Data', y='Preco')
 st.plotly_chart(fig, use_container_width=True)
 
 st.dataframe(df)
+
+
+st.write("# Previsões")
+plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions)
