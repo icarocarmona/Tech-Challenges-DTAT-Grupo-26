@@ -8,6 +8,7 @@ import numpy as np
 import plotly.express as px
 from statsmodels.tsa.seasonal import seasonal_decompose
 
+
 @st.cache_data
 def load_dataset():
     df = pd.read_csv(
@@ -30,53 +31,53 @@ df = load_dataset()
 
 
 def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions):
-  # Criar as figuras
-  fig = go.Figure()
+    # Criar as figuras
+    fig = go.Figure()
 
-  # Adicionar os preços atuais
-  fig.add_trace(go.Scatter(x=current_week_dates, y=current_week_prices,
-                          mode='lines+markers',
-                          name='Preços Atuais',
-                          line=dict(color='blue'),
-                          marker=dict(symbol='circle')))
+    # Adicionar os preços atuais
+    fig.add_trace(go.Scatter(x=current_week_dates, y=current_week_prices,
+                             mode='lines+markers',
+                             name='Preços Atuais',
+                             line=dict(color='blue'),
+                             marker=dict(symbol='circle')))
 
-  # Adicionar as previsões para a próxima semana
-  fig.add_trace(go.Scatter(x=next_week_dates, y=next_week_predictions,
-                          mode='lines+markers',
-                          name='Previsões para a Próxima Semana',
-                          line=dict(color='red', dash='dash'),
-                          marker=dict(symbol='circle')))
+    # Adicionar as previsões para a próxima semana
+    fig.add_trace(go.Scatter(x=next_week_dates, y=next_week_predictions,
+                             mode='lines+markers',
+                             name='Previsões para a Próxima Semana',
+                             line=dict(color='red', dash='dash'),
+                             marker=dict(symbol='circle')))
 
-  # Atualizar o layout do gráfico
-  fig.update_layout(
-      title='Preços Reais e Previsões para as Últimas Duas Semanas',
-      xaxis_title='Data',
-      yaxis_title='Preço',
-      xaxis=dict(
-          tickformat='%Y-%m-%d',
-          tickmode='linear'
-      ),
-      legend=dict(
-          x=0.01, y=0.99,
-          bgcolor='rgba(255, 255, 255, 0)',
-          bordercolor='rgba(255, 255, 255, 0)'
-      ),
-      autosize=False,
-      width=1000,
-      height=500,
-      margin=dict(
-          l=50,
-          r=50,
-          b=50,
-          t=50,
-          pad=4
-      ),
-    #   paper_bgcolor="LightSteelBlue"
-  )
+    # Atualizar o layout do gráfico
+    fig.update_layout(
+        title='Preços Reais e Previsões para as Últimas Duas Semanas',
+        xaxis_title='Data',
+        yaxis_title='Preço',
+        xaxis=dict(
+            tickformat='%Y-%m-%d',
+            tickmode='linear'
+        ),
+        legend=dict(
+            x=0.01, y=0.99,
+            bgcolor='rgba(255, 255, 255, 0)',
+            bordercolor='rgba(255, 255, 255, 0)'
+        ),
+        autosize=False,
+        width=1000,
+        height=500,
+        margin=dict(
+            l=50,
+            r=50,
+            b=50,
+            t=50,
+            pad=4
+        ),
+        #   paper_bgcolor="LightSteelBlue"
+    )
 
-  # Exibir o gráfico
+    # Exibir o gráfico
 #   fig.show()
-  st.plotly_chart(fig)
+    st.plotly_chart(fig)
 
 
 y = df['Preco'].values  # Output é o preço atual
@@ -112,9 +113,10 @@ st.plotly_chart(fig, use_container_width=True)
 st.dataframe(df)
 
 st.write("# Previsões")
-plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions)
+plot_predict(current_week_dates, current_week_prices,
+             next_week_dates, next_week_predictions)
 
-## Analise Pri
+# Analise Pri
 # Atribuir o dataframe a uma nova variável dfp
 dfp = df
 
@@ -130,8 +132,7 @@ preco_anual = dfp.groupby('Ano')['Preco'].mean()
 # Criando o gráfico de linha
 fig = go.Figure()
 
-fig.add_trace(go.Scatter(
-=======
+# fig.add_trace(go.Scatter(
 # INÍCIO BIA - Variações Anuais do Preço do Petróleo Brent
 
 st.write("# Variações Anuais do Preço do Petróleo Brent")
@@ -181,9 +182,6 @@ fig.add_trace(go.Bar(
 ))
 
 # Adicionando título e rótulos
-fig.update_layout(
-    title='Variações Anuais do Preço do Petróleo Brent',
-=======
 anual.update_layout(
     title='Variações registradas no DataFrame',
     xaxis_title='Ano',
@@ -233,23 +231,17 @@ fig.update_layout(
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
 
-## Analise Pri
-
-#import streamlit as st
-
-import streamlit as st
+# Analise Pri
 
 texto = """
-Em 2011, o preço do petróleo Brent atingiu um máximo de 99,20 dólares por barril. 
-O aumento foi causado por fatores como o alívio em relação às contas dos Estados Unidos, 
+Em 2011, o preço do petróleo Brent atingiu um máximo de 99,20 dólares por barril.
+O aumento foi causado por fatores como o alívio em relação às contas dos Estados Unidos,
 a fraqueza do dólar e as expectativas de um crescimento mais forte liderado pela China.
 
 <a href="https://www.terra.com.br/economia/pesquisa-preco-do-petroleo-fica-acima-de-us-90-em-2011,d09fd0d6796ea310VgnCLD200000bbcceb0aRCRD.html#:~:text=O%20petr%C3%B3leo%20Brent%20subiu%20a%20US$%2099%2C20,crescimento%20mais%20forte%20liderado%20por%20China%20e">Fonte de informação</a>
 """
 
 st.write(texto, unsafe_allow_html=True)
-
-import streamlit as st
 
 texto = """
 Em 2015, o preço do barril de petróleo Brent fechou a 31 de dezembro a 37,10 dólares, o que representa uma queda anual de 34,7% em relação ao preço de 56,82 dólares em 2014. No entanto, em maio de 2015, o barril de Brent atingiu a sua máxima do ano, a 69,63 dólares.
@@ -258,7 +250,6 @@ Em 2015, o preço do barril de petróleo Brent fechou a 31 de dezembro a 37,10 d
 """
 
 st.write(texto, unsafe_allow_html=True)
-
 
 
 # Atribuir o dataframe a uma nova variável dfp
@@ -294,14 +285,15 @@ fig.update_layout(
     xaxis=dict(
         tickmode='array',
         tickvals=list(range(1, 13)),
-        ticktext=['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+        ticktext=['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                  'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
     )
 )
 
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
 
-## Analise Pri
+# Analise Pri
 # Atribuir o dataframe a uma nova variável dfp
 dfp = df
 
@@ -338,21 +330,21 @@ fig.update_layout(
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
 
-df = load_dataset()
-dfp = df.copy()
-
 # Convertendo a coluna 'Data' para o tipo datetime
-dfp['Data'] = pd.to_datetime(dfp['Data'])
 dfp.set_index('Data', inplace=True)
 
 # Decompor a série temporal
 decomposicao = seasonal_decompose(dfp['Preco'], model='additive', period=12)
 
 # Criar figuras individuais para cada componente da decomposição
-fig_observed = go.Scatter(x=dfp.index, y=decomposicao.observed, mode='lines', name='Observado')
-fig_trend = go.Scatter(x=dfp.index, y=decomposicao.trend, mode='lines', name='Tendência')
-fig_seasonal = go.Scatter(x=dfp.index, y=decomposicao.seasonal, mode='lines', name='Sazonalidade')
-fig_residual = go.Scatter(x=dfp.index, y=decomposicao.resid, mode='lines', name='Resíduo')
+fig_observed = go.Scatter(
+    x=dfp.index, y=decomposicao.observed, mode='lines', name='Observado')
+fig_trend = go.Scatter(x=dfp.index, y=decomposicao.trend,
+                       mode='lines', name='Tendência')
+fig_seasonal = go.Scatter(x=dfp.index, y=decomposicao.seasonal,
+                          mode='lines', name='Sazonalidade')
+fig_residual = go.Scatter(x=dfp.index, y=decomposicao.resid,
+                          mode='lines', name='Resíduo')
 
 # Criar o subplot
 fig = go.Figure()
@@ -372,7 +364,7 @@ fig.update_layout(
 
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
-=======
+
 st.plotly_chart(anual, use_container_width=True)
 
 st.write("Correlação preço do petróleo com a taxa de câmbio: https://www.ibp.org.br/observatorio-do-setor/snapshots/preco-do-petroleo-e-taxa-de-cambio/")
@@ -381,9 +373,11 @@ st.write("Correlação preço do petróleo com a taxa de câmbio: https://www.ib
 
 st.write("# Análise ano 2016")
 
-# Pegando ano de 2016
-dados_2016 = df[df['Ano'] == 2016]
+st.write(dfp.head())
 
+# Pegando ano de 2016
+dados_2016 = dfp[dfp['Ano'] == 2016]
+dados_2016.reset_index(inplace=True)
 # Pegando meses da coluna de Data
 dados_2016['Mes'] = dados_2016['Data'].dt.month
 
@@ -417,6 +411,7 @@ st.write("# Análise ano 2020")
 
 # Pegando ano de 2020
 dados_2020 = df[df['Ano'] == 2020]
+dados_2020.reset_index(inplace=True)
 
 # Pegando meses da coluna de Data
 dados_2020['Mes'] = dados_2020['Data'].dt.month
@@ -451,6 +446,7 @@ st.write("# Análise ano 2023")
 
 # Pegando ano de 2020
 dados_2023 = df[df['Ano'] == 2023]
+dados_2023.reset_index(inplace=True)
 
 # Pegando meses da coluna de Data
 dados_2023['Mes'] = dados_2023['Data'].dt.month
