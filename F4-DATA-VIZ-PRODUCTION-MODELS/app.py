@@ -110,6 +110,147 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.dataframe(df)
 
-
 st.write("# Previsões")
 plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions)
+
+# INÍCIO BIA - Variações Anuais do Preço do Petróleo Brent
+
+st.write("# Variações Anuais do Preço do Petróleo Brent")
+
+# Convertendo a coluna 'Data' para o tipo datetime
+df['Data'] = pd.to_datetime(df['Data'])
+
+# Extraindo o ano da coluna 'Data'
+df['Ano'] = df['Data'].dt.year
+
+# Agrupando os dados por ano e calculando a média dos preços
+preco_anual = df.groupby('Ano')['Preco'].mean()
+
+# Agrupando os dados por ano e calculando a média dos preços (Gráfico Base da Pri)
+preco_anual = df.groupby('Ano')['Preco'].mean()
+
+# Criando o gráfico de linha
+anual = go.Figure()
+
+anual.add_trace(go.Scatter(
+    x=preco_anual.index,
+    y=preco_anual.values,
+    mode='lines+markers',
+    name='Preço Médio Anual'
+))
+
+# Adicionando título e rótulos
+anual.update_layout(
+    title='Variações registradas no DataFrame',
+    xaxis_title='Ano',
+    yaxis_title='Preço Médio',
+    xaxis=dict(tickmode='linear')
+)
+
+st.plotly_chart(anual, use_container_width=True)
+
+st.write("Correlação preço do petróleo com a taxa de câmbio: https://www.ibp.org.br/observatorio-do-setor/snapshots/preco-do-petroleo-e-taxa-de-cambio/")
+
+# ANO 2016
+
+st.write("# Análise ano 2016")
+
+# Pegando ano de 2016
+dados_2016 = df[df['Ano'] == 2016]
+
+# Pegando meses da coluna de Data
+dados_2016['Mes'] = dados_2016['Data'].dt.month
+
+# Media mensal
+media_mensal_2016 = dados_2016.groupby('Mes')['Preco'].mean()
+
+ano2016 = go.Figure()
+
+ano2016.add_trace(go.Scatter(
+    x=media_mensal_2016.index,
+    y=dados_2016['Preco'].values,
+    mode='lines+markers',
+    name='Média 2016'
+))
+
+# Adicionando título e rótulos
+ano2016.update_layout(
+    title='Média mensal do preço do petróleo brent no ano de 2016',
+    xaxis_title='Ano',
+    yaxis_title='Preço Médio',
+    xaxis=dict(tickmode='linear')
+)
+
+st.plotly_chart(ano2016, use_container_width=True)
+
+# JUSTIFICATIVA st.write("## Anuário estatístico: https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/anuario-estatistico-2016 --/-- Petróleo abaixo de 50 dólares: https://g1.globo.com/economia/mercados/noticia/2016/10/petroleo-segue-abaixo-de-us-50-ha-mais-de-1-ano-veja-impactos.html")
+
+# ANO 2020
+
+st.write("# Análise ano 2020")
+
+# Pegando ano de 2020
+dados_2020 = df[df['Ano'] == 2020]
+
+# Pegando meses da coluna de Data
+dados_2020['Mes'] = dados_2020['Data'].dt.month
+
+# Media mensal
+media_mensal_2020 = dados_2020.groupby('Mes')['Preco'].mean()
+
+ano2020 = go.Figure()
+
+ano2020.add_trace(go.Scatter(
+    x=media_mensal_2020.index,
+    y=dados_2020['Preco'].values,
+    mode='lines+markers',
+    name='Média 2020'
+))
+
+# Adicionando título e rótulos
+ano2020.update_layout(
+    title='Média mensal do preço do petróleo brent no ano de 2020',
+    xaxis_title='Ano',
+    yaxis_title='Preço Médio',
+    xaxis=dict(tickmode='linear')
+)
+
+st.plotly_chart(ano2020, use_container_width=True)
+
+# JUSTIFICATIVA st.write("## Mês de abril, primeiro indice negativo: https://g1.globo.com/economia/noticia/2020/04/20/preco-do-petroleo-americano-despenca-quase-40percent-e-vai-abaixo-de-us-12-o-barril.ghtml --/-- Análise 2020: https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020/#:~:text=O%20temor%20relacionado%20%C3%A0%20prov%C3%A1vel,25%20para%20US%2468%2C60.)
+
+# ANO 2023
+
+st.write("# Análise ano 2023")
+
+# Pegando ano de 2020
+dados_2023 = df[df['Ano'] == 2023]
+
+# Pegando meses da coluna de Data
+dados_2023['Mes'] = dados_2023['Data'].dt.month
+
+# Media mensal
+media_mensal_2023 = dados_2023.groupby('Mes')['Preco'].mean()
+
+ano2023 = go.Figure()
+
+ano2023.add_trace(go.Scatter(
+    x=media_mensal_2023.index,
+    y=dados_2023['Preco'].values,
+    mode='lines+markers',
+    name='Média 2020'
+))
+
+# Adicionando título e rótulos
+ano2023.update_layout(
+    title='Média mensal do preço do petróleo brent no ano de 2023',
+    xaxis_title='Ano',
+    yaxis_title='Preço Médio',
+    xaxis=dict(tickmode='linear')
+)
+
+st.plotly_chart(ano2023, use_container_width=True)
+
+# JUSTIFICATIVA st.write("## Geral GOV: https://www.gov.br/anp/pt-br/canais_atendimento/imprensa/noticias-comunicados/reservas-provadas-de-petroleo-no-brasil-crescem-7-em-2023#:~:text=Em%202023%2C%20houve%20aumento%20de,prov%C3%A1veis%20e%20poss%C3%ADveis%20(3P). --/-- Highlights: https://agenciabrasil.ebc.com.br/economia/noticia/2024-02/producao-media-de-petroleo-e-gas-bate-recorde-em-2023-informa-anp)
+
+# FIM BIA
