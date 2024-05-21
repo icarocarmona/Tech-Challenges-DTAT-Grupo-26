@@ -13,6 +13,17 @@ import pandas as pd
 from sklearn.metrics import r2_score
 from io import BytesIO
 
+st.set_page_config(
+    page_title="🚀 BackOffice 🧑‍🚀 | Tech Challenge - Grupo 26",
+    page_icon="🚀",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Report a bug': "https://github.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/issues",
+        'About': "# Este projeto faz parte de uma das entregas da Pós-Tech em Data Analytics."
+    }
+
+)
+
 st.header('🚀 BackOffice 🧑‍🚀| Tech Challege - Grupo 26', divider='rainbow')
 
 
