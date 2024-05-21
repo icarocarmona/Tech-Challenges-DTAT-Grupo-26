@@ -8,13 +8,8 @@ import numpy as np
 import plotly.express as px
 import io
 import boto3
+from io import BytesIO
 
-
-@st.cache_data
-def load_dataset():
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/F4-DATA-VIZ-PRODUCTION-MODELS/petroleo_bruto.csv")
-    return df
 
 # Carregando o arquivo do modelo
 
@@ -22,6 +17,7 @@ aws_access_key_id = st.secrets["aws_access_key_id"]
 aws_secret_access_key = st.secrets["aws_secret_access_key"]
 bucket_name = 'modelo-postech'
 object_key = 'modelo.pkl'
+object_key_csv = 'petroleo_bruto.csv'
 
 session = boto3.Session(
     aws_access_key_id=aws_access_key_id,
@@ -29,6 +25,15 @@ session = boto3.Session(
 )
 
 s3 = session.client('s3')
+
+
+@st.cache_data
+def load_dataset():
+    response = s3.get_object(Bucket=bucket_name, Key=object_key_csv)
+    dados_csv = response['Body'].read()
+    df = pd.read_csv(BytesIO(dados_csv))
+    return df
+
 
 response = s3.get_object(Bucket=bucket_name, Key=object_key)
 model_data = response['Body'].read()
