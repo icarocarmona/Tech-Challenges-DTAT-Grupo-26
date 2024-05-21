@@ -333,7 +333,11 @@ ano2016.update_layout(
 
 st.plotly_chart(ano2016, use_container_width=True)
 
-st.write("Anuário estatístico: https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/anuario-estatistico-2016 --/-- Petróleo abaixo de 50 dólares: https://g1.globo.com/economia/mercados/noticia/2016/10/petroleo-segue-abaixo-de-us-50-ha-mais-de-1-ano-veja-impactos.html")
+st.write("Em 2016, o preço do petróleo Brent caiu abaixo dos 50 dólares por barril devido ao excesso de oferta e à demanda fraca, especialmente da China. A OPEP decidiu não reduzir sua produção, exacerbando a situação para pressionar os produtores de xisto nos EUA. A desaceleração econômica global também contribuiu para a queda dos preços. Esse cenário trouxe desafios financeiros para as empresas petrolíferas e economias dependentes do petróleo, enquanto beneficiou países importadores com custos de energia mais baixos.")
+
+st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/anuario-estatistico-2016)')
+
+st.markdown('[Fonte de Informação](https://g1.globo.com/economia/mercados/noticia/2016/10/petroleo-segue-abaixo-de-us-50-ha-mais-de-1-ano-veja-impactos.html)')
 
 # ANO 2020
 
@@ -352,8 +356,8 @@ media_mensal_2020 = dados_2020.groupby('Mes')['Preco'].mean()
 ano2020 = go.Figure()
 
 ano2020.add_trace(go.Scatter(
-    x=media_mensal_2020.index,
-    y=dados_2020['Preco'].values,
+    x=dados_2020['Preco'].index,
+    y=media_mensal_2020.values,
     mode='lines+markers',
     name='Média 2020'
 ))
@@ -368,7 +372,11 @@ ano2020.update_layout(
 
 st.plotly_chart(ano2020, use_container_width=True)
 
-# JUSTIFICATIVA st.write("## Mês de abril, primeiro indice negativo: https://g1.globo.com/economia/noticia/2020/04/20/preco-do-petroleo-americano-despenca-quase-40percent-e-vai-abaixo-de-us-12-o-barril.ghtml --/-- Análise 2020: https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020/#:~:text=O%20temor%20relacionado%20%C3%A0%20prov%C3%A1vel,25%20para%20US%2468%2C60.)
+st.write("Em 2020, o preço do petróleo Brent caiu drasticamente devido à pandemia de COVID-19, que reduziu a demanda global por combustível, e a um conflito de produção entre a Arábia Saudita e a Rússia. Esse conflito resultou em um excesso de oferta, fazendo os preços caírem para menos de 20 dólares por barril em abril. A queda teve impactos severos na indústria petrolífera, incluindo cortes de produção e dificuldades financeiras para muitas empresas.")
+
+st.markdown('[Fonte de Informação](https://g1.globo.com/economia/noticia/2020/04/20/preco-do-petroleo-americano-despenca-quase-40percent-e-vai-abaixo-de-us-12-o-barril.ghtml)')
+
+st.markdown('[Fonte de Informação](https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020/#:~:text=O%20temor%20relacionado%20%C3%A0%20prov%C3%A1vel,25%20para%20US%2468%2C60.)')
 
 # ANO 2023
 
@@ -387,8 +395,8 @@ media_mensal_2023 = dados_2023.groupby('Mes')['Preco'].mean()
 ano2023 = go.Figure()
 
 ano2023.add_trace(go.Scatter(
-    x=media_mensal_2023.index,
-    y=dados_2023['Preco'].values,
+    x=dados_2023['Preco'].index,
+    y=media_mensal_2023.values,
     mode='lines+markers',
     name='Média 2020'
 ))
@@ -403,7 +411,11 @@ ano2023.update_layout(
 
 st.plotly_chart(ano2023, use_container_width=True)
 
-# JUSTIFICATIVA st.write("## Geral GOV: https://www.gov.br/anp/pt-br/canais_atendimento/imprensa/noticias-comunicados/reservas-provadas-de-petroleo-no-brasil-crescem-7-em-2023#:~:text=Em%202023%2C%20houve%20aumento%20de,prov%C3%A1veis%20e%20poss%C3%ADveis%20(3P). --/-- Highlights: https://agenciabrasil.ebc.com.br/economia/noticia/2024-02/producao-media-de-petroleo-e-gas-bate-recorde-em-2023-informa-anp)
+st.write("Em 2023, o preço do petróleo Brent foi marcado por volatilidade, começando com uma queda devido à desaceleração econômica global e alta oferta. No entanto, ao longo do ano, os preços subiram devido à recuperação econômica, aumento da demanda, cortes de produção pela OPEP+ e instabilidade geopolítica. No final do ano, o Brent registrou um aumento significativo, superando as expectativas dos analistas.")
+
+st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/canais_atendimento/imprensa/noticias-comunicados/reservas-provadas-de-petroleo-no-brasil-crescem-7-em-2023#:~:text=Em%202023%2C%20houve%20aumento%20de,prov%C3%A1veis%20e%20poss%C3%ADveis%20(3P).)')
+
+st.markdown('[Fonte de Informação](https://agenciabrasil.ebc.com.br/economia/noticia/2024-02/producao-media-de-petroleo-e-gas-bate-recorde-em-2023-informa-anp)')
 
 # Convertendo a coluna 'Data' para o tipo datetime
 dfp.set_index('Data', inplace=True)
@@ -440,6 +452,6 @@ fig.update_layout(
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
 
-st.write("Utilizamos a decomposição de séries temporais para entender o que compõem a série e como eles contribuem para suas variações ao longo do tempo. Ela foi útil para identificarmos padrões e tendências em dados temporais. Remover efeitos sazonais para análise de tendências de longo prazo." 
-         
-"Avaliar a eficácia de modelos de previsão e detecção de anomalias e apoiar a tomada de decisões. O gráfico foi valioso para entender a estrutura e o comportamento de dados temporais.")
+st.write("Utilizamos a decomposição de séries temporais para entender o que compõem a série e como eles contribuem para suas variações ao longo do tempo. Ela foi útil para identificarmos padrões e tendências em dados temporais. Remover efeitos sazonais para análise de tendências de longo prazo.") 
+     
+st.write("Avaliar a eficácia de modelos de previsão e detecção de anomalias e apoiar a tomada de decisões. O gráfico foi valioso para entender a estrutura e o comportamento de dados temporais.")
