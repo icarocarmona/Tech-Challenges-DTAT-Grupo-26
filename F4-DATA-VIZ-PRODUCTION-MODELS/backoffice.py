@@ -26,6 +26,9 @@ st.set_page_config(
 
 st.header('🚀 BackOffice 🧑‍🚀| Tech Challege - Grupo 26', divider='rainbow')
 
+st.image('https://github.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/blob/main/F4-DATA-VIZ-PRODUCTION-MODELS/Arquitetura%20do%20Projeto.png?raw=true',
+         caption='Arquitetura do Projeto')
+
 
 @st.cache_data
 def load_dataset():
