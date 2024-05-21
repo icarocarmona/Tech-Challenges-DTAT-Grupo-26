@@ -6,13 +6,36 @@ from datetime import datetime
 import joblib
 import numpy as np
 import plotly.express as px
+import io
+import boto3
+from io import BytesIO
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
+# Carregando o arquivo do modelo
+
+aws_access_key_id = st.secrets["aws_access_key_id"]
+aws_secret_access_key = st.secrets["aws_secret_access_key"]
+bucket_name = 'modelo-postech'
+object_key = 'modelo.pkl'
+object_key_csv = 'petroleo_bruto.csv'
+
+session = boto3.Session(
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key
+)
+
+s3 = session.client('s3')
+response = s3.get_object(Bucket=bucket_name, Key=object_key)
+model_data = response['Body'].read()
+
+model = joblib.load(io.BytesIO(model_data))
+
 @st.cache_data
 def load_dataset():
-    df = pd.read_csv(
-        "https://raw.githubusercontent.com/icarocarmona/Tech-Challenges-DTAT-Grupo-26/main/F4-DATA-VIZ-PRODUCTION-MODELS/petroleo_bruto.csv")
+    response = s3.get_object(Bucket=bucket_name, Key=object_key_csv)
+    dados_csv = response['Body'].read()
+    df = pd.read_csv(BytesIO(dados_csv))
     return df
 
 # Inicio do visual
@@ -46,6 +69,7 @@ def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_
                              line=dict(color='red', dash='dash'),
                              marker=dict(symbol='circle')))
 
+
     # Atualizar o layout do gráfico
     fig.update_layout(
         title='Preços Reais e Previsões para as Últimas Duas Semanas',
@@ -77,14 +101,19 @@ def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_
 #   fig.show()
     st.plotly_chart(fig)
 
-y = df['Preco'].values  # Output é o preço atual
+# Criar recursos de atraso (lag features)
+lags = 1
+for lag in range(1, lags + 1):
+    df[f'Preco_lag_{lag}'] = df['Preco'].shift(lag)
+
+X = df[['Preco_lag_1']].values  # Inputs são os preços atrasados
 
 model = joblib.load('./modelo.pkl')
 
 # st.write(model.predict(y[-1].reshape(1, -1)))
 
 # Fazer previsões para a próxima semana usando os últimos dados conhecidos
-last_known_data = y[-1].reshape(1, -1)
+last_known_data = X[-1].reshape(1, -1)
 next_week_predictions = []
 for _ in range(7):  # para cada dia da próxima semana
     next_day_pred = model.predict(last_known_data)[0]
@@ -102,7 +131,15 @@ current_week_prices = df['Preco'].iloc[-7:]
 
 fig = px.line(data_frame=df, x='Data', y='Preco')
 
-# fig.show()
+# INICIO VISUAL
+
+# # Using "with" notation
+# with st.sidebar:
+#     add_radio = st.radio(
+#         "Choose a shipping method",
+#         ("Standard (5-15 days)", "Express (2-5 days)")
+#     )
+
 
 st.plotly_chart(fig, use_container_width=True)
 
