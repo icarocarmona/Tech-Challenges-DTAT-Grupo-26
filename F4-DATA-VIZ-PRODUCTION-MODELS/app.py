@@ -31,6 +31,7 @@ model_data = response['Body'].read()
 
 model = joblib.load(io.BytesIO(model_data))
 
+
 @st.cache_data
 def load_dataset():
     response = s3.get_object(Bucket=bucket_name, Key=object_key_csv)
@@ -39,6 +40,7 @@ def load_dataset():
     return df
 
 # Inicio do visual
+
 
 st.set_page_config(
     page_title="Tech Challenge - Grupo 26",
@@ -50,6 +52,7 @@ st.set_page_config(
 st.header('⛽ Tech Challege - Grupo 26', divider='rainbow')
 
 df = load_dataset()
+
 
 def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_week_predictions):
     # Criar as figuras
@@ -68,7 +71,6 @@ def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_
                              name='Previsões para a Próxima Semana',
                              line=dict(color='red', dash='dash'),
                              marker=dict(symbol='circle')))
-
 
     # Atualizar o layout do gráfico
     fig.update_layout(
@@ -101,16 +103,13 @@ def plot_predict(current_week_dates, current_week_prices, next_week_dates, next_
 #   fig.show()
     st.plotly_chart(fig)
 
+
 # Criar recursos de atraso (lag features)
 lags = 1
 for lag in range(1, lags + 1):
     df[f'Preco_lag_{lag}'] = df['Preco'].shift(lag)
 
 X = df[['Preco_lag_1']].values  # Inputs são os preços atrasados
-
-model = joblib.load('./modelo.pkl')
-
-# st.write(model.predict(y[-1].reshape(1, -1)))
 
 # Fazer previsões para a próxima semana usando os últimos dados conhecidos
 last_known_data = X[-1].reshape(1, -1)
@@ -129,25 +128,28 @@ current_week_dates = df['Data'].iloc[-7:]
 current_week_prices = df['Preco'].iloc[-7:]
 
 
-fig = px.line(data_frame=df, x='Data', y='Preco')
-
 # INICIO VISUAL
 
-# # Using "with" notation
-# with st.sidebar:
-#     add_radio = st.radio(
-#         "Choose a shipping method",
-#         ("Standard (5-15 days)", "Express (2-5 days)")
-#     )
+# fig = px.line(data_frame=df, x='Data', y='Preco')
+# st.plotly_chart(fig, use_container_width=True)
 
+st.write("Este projeto é a entrega do desafio tecnológico da fase 3 . Nele, realizamos uma análise dos dados do Preço por barril do petróleo bruto Brent (FOB) e realizamos o deploy e previsão da serie temporal.")
 
-st.plotly_chart(fig, use_container_width=True)
+st.write("### Integrantes do Grupo 26")
 
-# st.dataframe(df)
+df_home = pd.DataFrame({
+    "Nome": ["Beatriz Vieira", "Icaro Carmona", "Priscila de França"],
+    "linkedin": ["https://www.linkedin.com/in/beatrizrvieira/", "https://www.linkedin.com/in/icarocarmona/", "https://www.linkedin.com/in/pridefranca/"],
+})
+st.dataframe(df_home,
+             column_config={
+                 "Nome": "Nome",
+                 "linkedin": st.column_config.LinkColumn("Linkedin URL")
+             },
+             use_container_width=True,
+             hide_index=True,
 
-st.write("# Previsões")
-plot_predict(current_week_dates, current_week_prices,
-             next_week_dates, next_week_predictions)
+             )
 
 # Analise Pri
 # Atribuir o dataframe a uma nova variável dfp
@@ -162,9 +164,28 @@ dfp['Ano'] = dfp['Data'].dt.year
 # Agrupando os dados por ano e calculando a média dos preços
 preco_anual = dfp.groupby('Ano')['Preco'].mean()
 
-#Variações Anuais do Preço do Petróleo Brent
+# Variações Anuais do Preço do Petróleo Brent
 
-st.write("# Variações Anuais do Preço do Petróleo Brent")
+st.write("## Variações Anuais do Preço do Petróleo Brent")
+
+texto = """
+Em 2011, o preço do petróleo Brent atingiu um máximo de 99,20 dólares por barril.
+O aumento foi causado por fatores como o alívio em relação às contas dos Estados Unidos,
+a fraqueza do dólar e as expectativas de um crescimento mais forte liderado pela China.
+
+<a href="https://www.terra.com.br/economia/pesquisa-preco-do-petroleo-fica-acima-de-us-90-em-2011,d09fd0d6796ea310VgnCLD200000bbcceb0aRCRD.html#:~:text=O%20petr%C3%B3leo%20Brent%20subiu%20a%20US$%2099%2C20,crescimento%20mais%20forte%20liderado%20por%20China%20e">Fonte de informação</a>
+"""
+
+st.write(texto, unsafe_allow_html=True)
+
+texto = """
+Em 2015, o preço do barril de petróleo Brent fechou a 31 de dezembro a 37,10 dólares, o que representa uma queda anual de 34,7% em relação ao preço de 56,82 dólares em 2014. No entanto, em maio de 2015, o barril de Brent atingiu a sua máxima do ano, a 69,63 dólares.
+
+<a href="https://exame.com/invest/mercados/barril-do-brent-encerra-2015-com-queda-anual-de-34-7/">Fonte de informação</a>
+"""
+
+st.write(texto, unsafe_allow_html=True)
+
 
 # Convertendo a coluna 'Data' para o tipo datetime
 df['Data'] = pd.to_datetime(df['Data'])
@@ -229,23 +250,6 @@ st.plotly_chart(fig)
 
 # Analise Pri
 
-texto = """
-Em 2011, o preço do petróleo Brent atingiu um máximo de 99,20 dólares por barril.
-O aumento foi causado por fatores como o alívio em relação às contas dos Estados Unidos,
-a fraqueza do dólar e as expectativas de um crescimento mais forte liderado pela China.
-
-<a href="https://www.terra.com.br/economia/pesquisa-preco-do-petroleo-fica-acima-de-us-90-em-2011,d09fd0d6796ea310VgnCLD200000bbcceb0aRCRD.html#:~:text=O%20petr%C3%B3leo%20Brent%20subiu%20a%20US$%2099%2C20,crescimento%20mais%20forte%20liderado%20por%20China%20e">Fonte de informação</a>
-"""
-
-st.write(texto, unsafe_allow_html=True)
-
-texto = """
-Em 2015, o preço do barril de petróleo Brent fechou a 31 de dezembro a 37,10 dólares, o que representa uma queda anual de 34,7% em relação ao preço de 56,82 dólares em 2014. No entanto, em maio de 2015, o barril de Brent atingiu a sua máxima do ano, a 69,63 dólares.
-
-<a href="https://exame.com/invest/mercados/barril-do-brent-encerra-2015-com-queda-anual-de-34-7/">Fonte de informação</a>
-"""
-
-st.write(texto, unsafe_allow_html=True)
 
 # Atribuir o dataframe a uma nova variável dfp
 dfp = df
@@ -303,7 +307,13 @@ media_por_ano = dfp.groupby('Ano').mean()['Preco']
 
 # ANO 2016
 
-st.write("# Análise ano 2016")
+st.write("## Análise ano 2016")
+
+st.write("Em 2016, o preço do petróleo Brent caiu abaixo dos 50 dólares por barril devido ao excesso de oferta e à demanda fraca, especialmente da China. A OPEP decidiu não reduzir sua produção, exacerbando a situação para pressionar os produtores de xisto nos EUA. A desaceleração econômica global também contribuiu para a queda dos preços. Esse cenário trouxe desafios financeiros para as empresas petrolíferas e economias dependentes do petróleo, enquanto beneficiou países importadores com custos de energia mais baixos.")
+
+st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/anuario-estatistico-2016)')
+
+st.markdown('[Fonte de Informação](https://g1.globo.com/economia/mercados/noticia/2016/10/petroleo-segue-abaixo-de-us-50-ha-mais-de-1-ano-veja-impactos.html)')
 
 # Pegando ano de 2016
 dados_2016 = dfp[dfp['Ano'] == 2016]
@@ -333,15 +343,17 @@ ano2016.update_layout(
 
 st.plotly_chart(ano2016, use_container_width=True)
 
-st.write("Em 2016, o preço do petróleo Brent caiu abaixo dos 50 dólares por barril devido ao excesso de oferta e à demanda fraca, especialmente da China. A OPEP decidiu não reduzir sua produção, exacerbando a situação para pressionar os produtores de xisto nos EUA. A desaceleração econômica global também contribuiu para a queda dos preços. Esse cenário trouxe desafios financeiros para as empresas petrolíferas e economias dependentes do petróleo, enquanto beneficiou países importadores com custos de energia mais baixos.")
-
-st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/centrais-de-conteudo/publicacoes/anuario-estatistico/anuario-estatistico-2016)')
-
-st.markdown('[Fonte de Informação](https://g1.globo.com/economia/mercados/noticia/2016/10/petroleo-segue-abaixo-de-us-50-ha-mais-de-1-ano-veja-impactos.html)')
 
 # ANO 2020
 
-st.write("# Análise ano 2020")
+st.write("## Análise ano 2020")
+
+st.write("Em 2020, o preço do petróleo Brent caiu drasticamente devido à pandemia de COVID-19, que reduziu a demanda global por combustível, e a um conflito de produção entre a Arábia Saudita e a Rússia. Esse conflito resultou em um excesso de oferta, fazendo os preços caírem para menos de 20 dólares por barril em abril. A queda teve impactos severos na indústria petrolífera, incluindo cortes de produção e dificuldades financeiras para muitas empresas.")
+
+st.markdown('[Fonte de Informação](https://g1.globo.com/economia/noticia/2020/04/20/preco-do-petroleo-americano-despenca-quase-40percent-e-vai-abaixo-de-us-12-o-barril.ghtml)')
+
+st.markdown('[Fonte de Informação](https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020/#:~:text=O%20temor%20relacionado%20%C3%A0%20prov%C3%A1vel,25%20para%20US%2468%2C60.)')
+
 
 # Pegando ano de 2020
 dados_2020 = df[df['Ano'] == 2020]
@@ -372,15 +384,15 @@ ano2020.update_layout(
 
 st.plotly_chart(ano2020, use_container_width=True)
 
-st.write("Em 2020, o preço do petróleo Brent caiu drasticamente devido à pandemia de COVID-19, que reduziu a demanda global por combustível, e a um conflito de produção entre a Arábia Saudita e a Rússia. Esse conflito resultou em um excesso de oferta, fazendo os preços caírem para menos de 20 dólares por barril em abril. A queda teve impactos severos na indústria petrolífera, incluindo cortes de produção e dificuldades financeiras para muitas empresas.")
-
-st.markdown('[Fonte de Informação](https://g1.globo.com/economia/noticia/2020/04/20/preco-do-petroleo-americano-despenca-quase-40percent-e-vai-abaixo-de-us-12-o-barril.ghtml)')
-
-st.markdown('[Fonte de Informação](https://einvestidor.estadao.com.br/investimentos/preco-petroleo-2020/#:~:text=O%20temor%20relacionado%20%C3%A0%20prov%C3%A1vel,25%20para%20US%2468%2C60.)')
-
 # ANO 2023
 
 st.write("# Análise ano 2023")
+
+st.write("Em 2023, o preço do petróleo Brent foi marcado por volatilidade, começando com uma queda devido à desaceleração econômica global e alta oferta. No entanto, ao longo do ano, os preços subiram devido à recuperação econômica, aumento da demanda, cortes de produção pela OPEP+ e instabilidade geopolítica. No final do ano, o Brent registrou um aumento significativo, superando as expectativas dos analistas.")
+
+st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/canais_atendimento/imprensa/noticias-comunicados/reservas-provadas-de-petroleo-no-brasil-crescem-7-em-2023#:~:text=Em%202023%2C%20houve%20aumento%20de,prov%C3%A1veis%20e%20poss%C3%ADveis%20(3P).)')
+
+st.markdown('[Fonte de Informação](https://agenciabrasil.ebc.com.br/economia/noticia/2024-02/producao-media-de-petroleo-e-gas-bate-recorde-em-2023-informa-anp)')
 
 # Pegando ano de 2020
 dados_2023 = df[df['Ano'] == 2023]
@@ -411,11 +423,6 @@ ano2023.update_layout(
 
 st.plotly_chart(ano2023, use_container_width=True)
 
-st.write("Em 2023, o preço do petróleo Brent foi marcado por volatilidade, começando com uma queda devido à desaceleração econômica global e alta oferta. No entanto, ao longo do ano, os preços subiram devido à recuperação econômica, aumento da demanda, cortes de produção pela OPEP+ e instabilidade geopolítica. No final do ano, o Brent registrou um aumento significativo, superando as expectativas dos analistas.")
-
-st.markdown('[Fonte de Informação](https://www.gov.br/anp/pt-br/canais_atendimento/imprensa/noticias-comunicados/reservas-provadas-de-petroleo-no-brasil-crescem-7-em-2023#:~:text=Em%202023%2C%20houve%20aumento%20de,prov%C3%A1veis%20e%20poss%C3%ADveis%20(3P).)')
-
-st.markdown('[Fonte de Informação](https://agenciabrasil.ebc.com.br/economia/noticia/2024-02/producao-media-de-petroleo-e-gas-bate-recorde-em-2023-informa-anp)')
 
 # Convertendo a coluna 'Data' para o tipo datetime
 dfp.set_index('Data', inplace=True)
@@ -441,6 +448,13 @@ fig.add_trace(fig_trend)
 fig.add_trace(fig_seasonal)
 fig.add_trace(fig_residual)
 
+st.write('## Decomposição da Série Temporal')
+
+st.write("Utilizamos a decomposição de séries temporais para entender o que compõem a série e como eles contribuem para suas variações ao longo do tempo. Ela foi útil para identificarmos padrões e tendências em dados temporais. Remover efeitos sazonais para análise de tendências de longo prazo.")
+
+st.write("Avaliar a eficácia de modelos de previsão e detecção de anomalias e apoiar a tomada de decisões. O gráfico foi valioso para entender a estrutura e o comportamento de dados temporais.")
+
+
 # Configurar o layout
 fig.update_layout(
     title='Decomposição da Série Temporal',
@@ -452,6 +466,9 @@ fig.update_layout(
 # Exibir o gráfico no Streamlit
 st.plotly_chart(fig)
 
-st.write("Utilizamos a decomposição de séries temporais para entender o que compõem a série e como eles contribuem para suas variações ao longo do tempo. Ela foi útil para identificarmos padrões e tendências em dados temporais. Remover efeitos sazonais para análise de tendências de longo prazo.") 
-     
-st.write("Avaliar a eficácia de modelos de previsão e detecção de anomalias e apoiar a tomada de decisões. O gráfico foi valioso para entender a estrutura e o comportamento de dados temporais.")
+st.write("# Previsões")
+
+st.write("Após análises e testes utilizando diversos modelos, escolhemos o GradientBoostingRegressor, que apresentou o melhor desempenho com esta série temporal. Segue, portanto, a previsão para os próximos 7 dias.")
+
+plot_predict(current_week_dates, current_week_prices,
+             next_week_dates, next_week_predictions)
