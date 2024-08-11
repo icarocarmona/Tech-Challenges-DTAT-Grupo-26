@@ -5,7 +5,8 @@ Este repositório contém todas as entregas dos Tech Challenges referentes a cad
 - Data Analysis and Exploration
 - Machine Learning and Time Series
 
-## Autores
+### Autores
+
 
 - [Beatriz Vieira](https://github.com/vbribeiro)
 - [Icaro Carmona](https://github.com/icarocarmona)
